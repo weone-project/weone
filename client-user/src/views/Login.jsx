@@ -25,13 +25,14 @@ const Login = () => {
         form: dataLogin
       }});
     };
+    
     useEffect(() => {
       if(dataLoginUser){
         localStorage.setItem('token', dataLoginUser.loginUser.access_token)
         navigate('/')
       }
   }, [dataLoginUser])
-  console.log(dataLoginUser, errorLoginUser);
+  console.log(dataLoginUser, errorLoginUser?.graphQLErrors[0].message);
   return (
     <>
       <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
@@ -89,7 +90,7 @@ const Login = () => {
               <div className="w-full"></div>
               <form action="">
               <div className="w-full mt-4">
-                <Input label="Email" type="email" color="purple" onChange={(e) => {
+                <Input label="Email" type="email" color="purple" required onChange={(e) => {
                   setDataLogin({
                     ...dataLogin,
                     email: e.target.value
@@ -97,7 +98,7 @@ const Login = () => {
                 }}/>
               </div>
               <div className="w-full mt-4">
-                <Input label="Password" type="password" color="purple" onChange={(e) => {
+                <Input label="Password" type="password" required color="purple" onChange={(e) => {
                   setDataLogin({
                     ...dataLogin,
                     password: e.target.value
