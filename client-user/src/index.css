@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800&display=swap');
+body {
+  margin: 0;
+  font-family: 'Lexend', sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* @import url('https://fonts.googleapis.com/css2?family=Sassy+Frass&display=swap'); */
+
+.card_p{
+  width: 250px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+.card_p_2{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.landing{
+  background:
+  linear-gradient(to top,
+   rgb(255, 255, 255), 
+   rgba(255, 255, 255, 0.788),  
+   rgba(255, 255, 255, 0.616),  
+   rgba(255, 255, 255, 0.401)),  
+   url(./groom-black-tuxedo-hugs-tender-stunning-bride-while-they-stand.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-color: white; */
+}
+/* 
+.detailProductImg{
+  background:
+  linear-gradient(to right,
+   rgba(255, 255, 255, 0.644), 
+   rgba(255, 255, 255, 0),  
+   rgba(255, 255, 255, 0),  
+   rgba(255, 255, 255, 0.618))
+} */
+
+.judul{
+  font-family: 'Sassy Frass', cursive;
+  font-size: 40px;
+  font-weight: 500;
+  color: rgb(153, 6, 6);
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.sectionSpecial {
+  background: url('https://alexandra.bridestory.com/image/upload/assets/bg-desktop3x-rkstZgpiI.webp');
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper-slide {
+  width: 60%;
+}
+
+.swiper-slide:nth-child(2n) {
+  width: 40%;
+}
+
+.swiper-slide:nth-child(3n) {
+  width: 20%;
+}
+
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
