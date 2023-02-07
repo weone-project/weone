@@ -17,7 +17,9 @@ const Navbar = () => {
                     <Link to={'/products'}>
                     <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Products</button>
                     </Link>
+                    <Link to={'/invitations'}>
                     <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Invitations</button>
+                    </Link>
                     <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Favorite</button>
                 </div>
                 </div>

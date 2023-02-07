@@ -10,6 +10,25 @@ body {
 }
 /* @import url('https://fonts.googleapis.com/css2?family=Sassy+Frass&display=swap'); */
 
+.map-container {
+  height: 400px;
+  }
+   
+  .sidebar {
+  background-color: rgba(35, 55, 75, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 12px;
+  border-radius: 4px;
+  }
+
+
+
 .card_p{
   width: 250px;
   display: -webkit-box;
