@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {HiOutlineShoppingBag } from 'react-icons/hi'
 import { GET_ORDERS } from '../queries/order';
@@ -6,28 +6,22 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import React, { useRef } from "react";
 import Rating from '@mui/material/Rating';
+import { useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 
 import "../style.css";
-// import {
-//     Tabs,
-//     TabsHeader,
-//     TabsBody,
-//     Tab,
-//     TabPanel,
-//   } from "@material-tailwind/react";
+import { GET_MIDTRANS } from '../queries/midtrans';
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    // bgcolor: 'background.paper',
-    // border: '2px solid #000',
     boxShadow: 24,
     p: 4,
 };
 const OrderHistory = () => {
+    const navigate = useNavigate()
     const [newData, setNewData] = useState([])
     const [filter, setFilter] = useState('All')
     const {data, loading, error} = useQuery(GET_ORDERS, {
@@ -36,10 +30,44 @@ const OrderHistory = () => {
         }
     })
     const [rating, setRating] = useState(0)
+    const [review, setReview] = useState('')
     
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [dataMidtrans, { loading: loadingMidtrans, error: errorMidtrans, data: dataMidtransData }] = useMutation(GET_MIDTRANS)
+    const clickorderPay = ( id, quantity, ProductId, ProductPrice, ProductName, ProductImgUrl, ProductEstimatedDay, reservationDate, fullPayment, downPayment, notes ) => {
+        dataMidtrans({
+          variables: {
+            form: {
+              quantity: +quantity,
+              reservationDate: reservationDate,
+              notes: notes,
+              paymentStatus: 'DONE',
+              productId: +ProductId,
+              downPayment: downPayment,
+              fullPayment: fullPayment,
+              orderId: +id
+            },
+            status: 'remaining-payment',
+            accessToken: localStorage.getItem('token')
+          }
+        })
+    }
+
+    useEffect(() => {
+        if (dataMidtransData?.midtransToken.token) {
+            window.snap.pay(dataMidtransData.midtransToken.token, {
+                onSuccess: (result) => {
+                    console.log('success', result)
+                    navigate('/')
+                    // navigate('/histories')
+                }
+            }) 
+        }
+    }, [dataMidtransData])
+
     useEffect(()=> {
         if (filter === 'DP') {
             const temp = data?.getOrdersUser?.filter(el => el.paymentStatus === "DP")
@@ -52,16 +80,37 @@ const OrderHistory = () => {
             setNewData(data2)
         }
     }, [filter, data])
-    console.log(newData);
+    
 
-    // const formatDate = (date) => {
-    //     var date = Date.parse(time);
-    // return ((typeof time != "undefined") ? prefix + date.toLocaleDateString("en-US")  : "");
-        // return date.toLocaleDateString("en-US")
-    //}
+
+    useEffect(()=> {
+        setNewData(data?.getOrdersUser)
+    }, [])
 
     const setFilterOrder = (data)=> {
         setFilter(data)
+    }
+
+    const formatRupiah = (money) => {
+        return new Intl.NumberFormat('id-ID',
+          { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }
+        ).format(money);
+    }
+
+    const formatEstimatedDate = (reservationDate, estimatedDate) => {
+        const date = new Date(reservationDate)
+        const date2 = new Date(estimatedDate)
+        const date3 = new Date(date.setDate(date.getDate() - estimatedDate))
+        return date3.toLocaleDateString("id", {year: 'numeric', month: 'long', day: 'numeric'})
+    }
+
+    const formatDate = (datee) => {
+        const date = new Date(datee)
+        return date.toLocaleDateString("id", {year: 'numeric', month: 'long', day: 'numeric'})
+    }
+
+    const submitTestimoni = () => {
+        console.log(rating, review)    
     }
 
     return (
@@ -79,6 +128,7 @@ const OrderHistory = () => {
                 }}>Success</button>
             </div>
             {newData?.map((item, index) => {
+                console.log(item);
                 return (
                     <>
                     <Modal
@@ -93,13 +143,13 @@ const OrderHistory = () => {
                                     <p className="text-2xl font-semibold">Review</p>
                                 </div>
                                 <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
-                                    <div className='w-[20%] h-full flex items-center'><img src="https://images.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,c_fill,g_faces,w_80,h_80/v1491534752/assets/MWV_jewel_box_yvmjjd.webp" className='rounded-lg w-[90px] h-[60px]' alt="" />
+                                    <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
                                     </div>
                                     <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
                                         <p className='font-semibold'>{item.Product.name}</p>
                                         <div className='flex'>
                                         </div>
-                                        <p className='text-[11px]'>Total Transaction: IDR 500.000.000,00</p>
+                                        <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
                                     </div>
                                 </div>
                                 <div className='w-full mt-4 flex flex-col items-center'>
@@ -122,10 +172,12 @@ const OrderHistory = () => {
                                         multiline
                                         rows={3}
                                         className='w-full max-h-[6em]'
+                                        onChange={(e) => {
+                                            setReview(e.target.value)
+                                        }}
                                     />
-                                    {/* <textarea name="" id="" cols="30" rows="10" placeholder='this venue was so big' className='focus:outline-none max-h-[6em] border-2 w-full p-2 rounded text-[13px]'></textarea> */}
                                 </div>
-                                <button className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
+                                <button onClick={submitTestimoni} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
                                     <p>Submit</p>
                                 </button>
                             </div>
@@ -141,21 +193,25 @@ const OrderHistory = () => {
                             }
                         </div>
                         <div className="flex items-center w-full mt-4 h-[4em]">
-                            <div className='w-[15%] h-full flex items-center'><img src="https://images.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,c_fill,g_faces,w_80,h_80/v1491534752/assets/MWV_jewel_box_yvmjjd.webp" className='rounded-lg w-[90px] h-[60px]' alt="" />
+                            <div className='w-[15%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
                             </div>
                             <div className='w-[50%] h-full flex justify-center flex-col'>
                                 <p className='font-semibold'>{item.Product.name}</p>
                                 <div className='flex'>
-                                <p className='text-[11px]'>Reservation date:  </p>
+                                <p className='text-[11px]'>Reservation date:  {formatDate(item.reservationDate)}</p>
                                 <button className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
                                 </div>
-                                <p className='text-[11px]'>Total Transaction: IDR 500.000.000,00</p>
+                                <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
                             </div>
                             {item.paymentStatus === 'DP' ? 
                             <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center'>
-                                <p className='text-[11px]'>remaining payment: <span className='font-semibold'>IDR 250.000.000,00</span></p>
-                                <p className='text-[11px]'>payment due: <span className='font-semibold'>28 Nov 2024</span> </p>
-                                <button className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Pay
+                                <p className='text-[11px]'>remaining payment: <span className='font-semibold'> {formatRupiah(item.fullPayment-item.downPayment)}</span></p>
+                                <p className='text-[11px]'>payment due: <span className='font-semibold'>{
+                                   formatEstimatedDate(item.reservationDate, item.Product.estimatedDay) 
+                                }</span> </p>
+                                <button onClick={() => {
+                                    clickorderPay(item.id, item.quantity, item.Product.id, item.Product.price, item.Product.name, item.Product.imgUrl, item.Product.estimatedDay, item.reservationDate, item.fullPayment, item.downPayment, item.notes)
+                                }} className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Pay
                                 </button>
                                 {/* <p className='text-[11px]'>Total Transaction</p>
                                 <p className='text-[13px]'>IDR 500.000.000,00</p> */}
