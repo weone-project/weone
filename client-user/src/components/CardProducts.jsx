@@ -14,19 +14,19 @@ const CardProducts = ({ product }) => {
      }
     return (
     <div onClick={() => {
-        clickProduct(product.id)
+        clickProduct(product?.id)
     }} className='max-w-[250px] rounded-lg text-[#00425A] cursor-pointer border-b-2 pb-2 group'>
         <div className="w-full relative max-h-[180px]">
-            <img src={product.imgUrl} alt="" className="w-[250px] h-[180px] rounded-lg mb-2 group-hover:shadow-md object-cover" />
-            <p className="absolute px-2 rounded-xl bottom-2 left-2 bg-gray-50 text-[11px] font-[400]">{product.Category.name}</p>
+            <img src={product?.imgUrl} alt="" className="w-[250px] h-[180px] rounded-lg mb-2 group-hover:shadow-md object-cover" />
+            <p className="absolute px-2 rounded-xl bottom-2 left-2 bg-gray-50 text-[11px] font-[400]">{product?.Category?.name}</p>
         </div>
-        <p className="card_p mx-2 font-[600] w-[90%]">{product.name}</p>
-        <p className="text-sm mt-[5px] mx-2">{formatRupiah(product.price)}</p>
+        <p className="card_p mx-2 font-[600] w-[90%]">{product?.name}</p>
+        <p className="text-sm mt-[5px] mx-2">{formatRupiah(product?.price)}</p>
         <div className="flex justify-between mx-2">
             <div className='flex items-center'>
-                <Rating name="read-only size-small" size="small" value={product.rating} precision={0.5} readOnly />
+                <Rating name="read-only size-small" size="small" value={product?.rating} precision={0.5} readOnly />
             </div>
-            <p className="text-[10px] flex items-center font-light"> <RiMapPin2Line/>{product.Vendor.city} </p>
+            <p className="text-[10px] flex items-center font-light"> <RiMapPin2Line/>{product?.Vendor?.city} </p>
         </div>
     </div>
     )

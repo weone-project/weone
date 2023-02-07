@@ -56,12 +56,12 @@ const router = createBrowserRouter([
     {
         path: '/register',
         element: <Register/>,
-        loader: () => {
-            if (!localStorage.getItem('token')) {
-                return redirect('/login')
-            }
-            return null
-        }
+        // loader: () => {
+        //     if (!localStorage.getItem('token')) {
+        //         return redirect('/login')
+        //     }
+        //     return null
+        // }
     },        
     {
         path: '/inv',

@@ -23,3 +23,17 @@ mutation Mutation($form: LoginFormUser) {
   }
 }
 `
+
+export const REGISTER_USER = gql`
+  mutation RegisterUser($form: RegisterFormUser) {
+  registerUser(form: $form) {
+    id
+    name
+    email
+    phoneNumber
+    address
+    userImgUrl
+    password
+  }
+}
+`

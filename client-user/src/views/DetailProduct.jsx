@@ -15,6 +15,8 @@ import { GET_PRODUCT_BY_ID } from "../queries/product";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_MIDTRANS } from "../queries/midtrans";
 import { ToastContainer, toast } from 'react-toastify';
+import { GET_TESTIMONI } from "../queries/testimoni";
+import loadingin from "../assets/53735-cart-icon-loader.gif";
 
 const style = {
     position: 'absolute',
@@ -30,8 +32,9 @@ const DetailProduct = () => {
         variables: {
           getProductByIdId: id
         }
-    })
-    const navigate = useNavigate()
+      })
+      const [number , setNumber] = useState(1)
+      const navigate = useNavigate()
     const [dataMidtrans, { loading: loadingMidtrans, error: errorMidtrans, data: dataMidtransData }] = useMutation(GET_MIDTRANS)
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -43,6 +46,26 @@ const DetailProduct = () => {
       notes: '',
       quantity: 1,
     })
+    const clickPlusNumber = () => {
+      setNumber(number + 1)
+      setTotalPrice(data?.getProductById?.price * (number + 1))
+      setTotalDP(data?.getProductById?.dpPrice * (number + 1))
+    }
+    const clickMinusNumber = () => {
+      if(number > 1){
+        setNumber(number - 1)
+        setTotalPrice(data?.getProductById?.price * (number - 1))
+        setTotalDP(data?.getProductById?.dpPrice * (number - 1))
+      }
+    }
+    console.log(totalPrice,  totalDP);
+  const { data: dataTestimoni, loading: loadingTestimoni, error: errorTestimoni } = useQuery(GET_TESTIMONI, {
+    variables: {
+      productId: +id
+    }
+
+  })
+  console.log(dataTestimoni);
 
   const formatRupiah = (money) => {
       return new Intl.NumberFormat('id-ID',
@@ -73,6 +96,7 @@ useEffect(() => {
   if (dataMidtransData?.midtransToken.token) {
     window.snap.pay(dataMidtransData.midtransToken.token, {
       onSuccess: (result) => {
+        console.log(result, '<<<<<<<<<<<<<<<<<<<<<<<<<<<');
         navigate('/histories')
       }
     }) 
@@ -96,17 +120,25 @@ const clickorderFull = () => {
       accessToken: localStorage.getItem('token')
     }
   })
-  .then((res) => {
-    window.snap.pay(dataMidtransData.midtransToken.token, {
-      onSuccess: (result) => {
-        navigate('/histories')
-      }
-    }
-  )
+  // .then((res) => {
+  //   window.snap.pay(dataMidtransData.midtransToken.token, {
+  //     onSuccess: (result) => {
+  //       navigate('/histories')
+  //     }
+  //   }
+  // )
 
-})
+// })
 }
   // console.log();
+  if (loading || loadingTestimoni) {
+    return (
+      <div className="min-h-[100vh] bg-white flex justify-center items-center pb-20">
+          <img src={loadingin} className="w-[200px]" alt="" />
+      </div>
+    )
+  }
+
 
 
   return (
@@ -214,7 +246,7 @@ const clickorderFull = () => {
             <div className='flex items-center mt-2'>
             <Rating name="read-only size-small" size="small" value={data?.getProductById?.rating} precision={0.5} readOnly />
             </div>
-            <p className="text-[10px] flex items-center font-light"> <RiMapPin2Line className="mr-[2px]"/> {data?.getProductById?.Vendor.city}, {data?.getProductById?.Vendor.province} </p>
+            <p className="text-[10px] flex items-center font-light"> <RiMapPin2Line className="mr-[2px]"/> {data?.getProductById?.Vendor?.city}, {data?.getProductById?.Vendor?.province} </p>
           </div>
         </div>
         <div className="w-full border-b-2 pb-10 py-2">
@@ -236,14 +268,14 @@ const clickorderFull = () => {
         </div>
         <div className="border-b-2 py-2 w-full flex items-center text-[#00425A]">
           <img
-            src={data?.getProductById?.Vendor.vendorImgUrl}
+            src={data?.getProductById?.Vendor?.vendorImgUrl}
             width={70}
             className="rounded-lg mr-4 my-4"
             alt=""
           />
           <div className="">
-            <p className="text-lg">{data?.getProductById?.Vendor.name}</p>
-            <p className="text-sm font-light flex items-center">{data?.getProductById?.Category.name} | <Rating name="read-only size-small" size="small" value={3.5} precision={0.5} readOnly /></p>
+            <p className="text-lg">{data?.getProductById?.Vendor?.name}</p>
+            <p className="text-sm font-light flex items-center">{data?.getProductById?.Category?.name} | <Rating name="read-only size-small" size="small" value={3.5} precision={0.5} readOnly /></p>
             <button className="border-[1px] rounded px-[2px] flex justify-center mt-2 hover:bg-gray-50">
                 <p className="text-[12px] font-[300]">Kunjungi Provil Vendor</p>
             </button>
@@ -252,30 +284,18 @@ const clickorderFull = () => {
         <div className="py-4 w-full flex flex-col justify-center">
           <div className="text-[18px]">TESTIMONI</div>
           <div className="max-w-full mt-2 flex overflow-auto py-2">
-            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
-              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
-              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
-                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
-                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
-              </div>
-            </div>
-            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
-              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
-              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
-                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
-                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
-              </div>
-            </div>
-            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
-              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
-              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
-                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
-                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
-              </div>
-            </div>
+            { dataTestimoni?.getTestimonies.map((item, index) => { 
+              return (
+                <div key={item.id} className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
+                  <img src={item?.User?.userImgUrl} className="w-[50px] h-[50px] rounded-full" alt="" />
+                  <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">{item?.User?.name}</p>
+                  <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
+                    <p className="text-[10px] font-light">{item?.testimony}</p>
+                    <Rating name="read-only size-small" size="small" value={item?.rating} precision={0.5} readOnly />
+                  </div>
+                </div>
+              )
+            })}
             <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
               <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
               <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
@@ -298,14 +318,19 @@ const clickorderFull = () => {
           </div>
           <div className="mt-4 bg-white shadow-lg w-full rounded-lg h-[60px] flex  p-6 justify-between items-center">
             <p className="text-[14px] font-light">Jumlah</p>
-            <input type="number" min="1" onChange={(e) => {
+            <div className="w-[50%] flex items-center justify-end">
+              <button onClick={clickPlusNumber} className="px-2 rounded-full mx-2 bg-[#645CBB] hover:bg-[#BFACE2]  text-white">+</button>
+              <p className="p-2 rounded-full mx-2">{number}</p>
+              <button onClick={clickMinusNumber} className="px-2 rounded-full mx-2 bg-[#645CBB] hover:bg-[#BFACE2] text-white">-</button>
+            </div>
+            {/* <input type="number" min="1" onChange={(e) => {
               setTotalPrice((+e.target.value * data?.getProductById?.price))
               setTotalDP((+e.target.value * data?.getProductById?.dpPrice))
               setFormOrder({
                 ...formOrder,
                 quantity: e.target.value
               })
-            }}/>
+            }}/> */}
           </div>
           <div className="mt-4  w-full rounded-lg h-[40px] flex flex-col items-center items-center">
             <div className="flex w-full">

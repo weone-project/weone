@@ -8,6 +8,7 @@ import { Input } from "@material-tailwind/react";
 import { GET_USERS, LOGIN_USER } from "../queries/user";
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import '../index.css'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -39,7 +40,7 @@ const Login = () => {
         <div className="flex w-full mx-[70px] justify-between items-center h-14">
           <div className="h-full flex items-center">
             <Link to={"/"} className="judul">
-              <img src={logo} alt="" width={120} />
+              <img src={logo} alt="" width={100} />
             </Link>
           </div>
           <div className="h-10 flex h-full">
@@ -62,9 +63,11 @@ const Login = () => {
         </div>
       </section>
       <section className="pt-14 w-full min-h-[100vh]">
-        <div className="w-full flex px-[300px] mt-[50px]">
-          <div className="min-w-[60%] bg-gray-100">dsad</div>
-          <div className="min-w-[40%] bg-white h-[35em] shadow rounded-lg flex flex-col">
+        <div className="w-full flex px-[150px] mt-[50px] rounded-xl">
+          <div className="min-w-[65%] bg-gray-100 login rounded-l-xl p-10 flex flex-col items-center">
+            <p className="w-[80%] flex items-center justify-center text-center text-[#00425A] text-[20px]">Persiapkan Pernikahan dengan Beragam Kemudahan & Penawaran Ekslusif</p>
+          </div>
+          <div className="min-w-[35%] bg-white h-[35em] shadow rounded-lg flex flex-col">
             <div className="w-full p-10 h-[90%]">
               <div className="w-full mt-2 mb-6">
                 <p className="text-xl font-semibold">LOGIN</p>
@@ -124,7 +127,7 @@ const Login = () => {
                     />
                   </div>
                 </div> */}
-                <button className="w-full items-center justify-center flex mt-8 bg-[#00425A] hover:bg-[#674188] duration-200 h-[40px] text-white rounded-lg" onClick={loginForm}>
+                <button className="w-full items-center justify-center flex mt-8 bg-[#645CBB] hover:bg-[#674188] duration-200 h-[40px] text-white rounded-lg" onClick={loginForm}>
                   <p className="">Login</p>
                 </button>
               </form>
