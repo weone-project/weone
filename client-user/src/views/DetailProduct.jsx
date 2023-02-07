@@ -14,14 +14,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GET_PRODUCT_BY_ID } from "../queries/product";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_MIDTRANS } from "../queries/midtrans";
+import { ToastContainer, toast } from 'react-toastify';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    // bgcolor: 'background.paper',
-    // border: '2px solid #000',
     boxShadow: 24,
     p: 4,
 };
@@ -44,12 +43,6 @@ const DetailProduct = () => {
       notes: '',
       quantity: 1,
     })
-    // console.log(data, totalDP);
-    // console.log(data?.getProductById?.rating);
-    // const [dataOrder, setDataOrder] = useState({
-    //   reservationDate: '',
-      
-    // } 
 
   const formatRupiah = (money) => {
       return new Intl.NumberFormat('id-ID',
@@ -57,64 +50,37 @@ const DetailProduct = () => {
       ).format(money);
   }
 
-  useEffect(() => {
-    
-  }, [])
 
-
-  const clickorderDP = async () => {
-    try {
-      await dataMidtrans({
-        variables: {
-          form: {
-            quantity: +formOrder.quantity,
-            reservationDate: formOrder.reservationDate,
-            notes: formOrder.notes,
-            paymentStatus: 'DP',
-            productId: +id,
-            downPayment: totalDP,
-            fullPayment: totalPrice
-          },
-          status: 'dp',
-          accessToken: localStorage.getItem('token')
-        }
-      })
-      // console.log(dataMidtransData, '<<<<<<<<<<<<<<<<<<<<');
-      // if (loadingMidtrans === false) {
-        window.snap.pay(dataMidtransData.midtransToken.token, {
-          onSuccess: (result) => {
-            navigate('/histories')
+  const clickorderDP = () => {
+    dataMidtrans({
+          variables: {
+            form: {
+              quantity: +formOrder.quantity,
+              reservationDate: formOrder.reservationDate,
+              notes: formOrder.notes,
+              paymentStatus: 'DP',
+              productId: +id,
+              downPayment: totalDP,
+              fullPayment: totalPrice
+            },
+            status: 'dp',
+            accessToken: localStorage.getItem('token')
           }
-        }) 
-      // }
-      
-    } catch (error) {
-      
-    }
-    // .then((res) => {
-    //   if (!dataMidtransData.midtransToken.token) {
-    //     return
-    //   } else {
-    //   }
-      // console.log(dataMidtransData.midtransToken?.token);
-
-  // })
+        })
 }
 
-// useEffect(() => {
-//   //  async () => {
-
-//   // }
-//   if (dataMidtransData.midtransToken.token) {
-//     window.snap.pay(dataMidtransData.midtransToken.token, {
-//       onSuccess: (result) => {
-//         navigate('/histories')
-//       }
-//     }) 
-//   }
-// }, [dataMidtransData.midtransToken.token])
+useEffect(() => {
+  if (dataMidtransData?.midtransToken.token) {
+    window.snap.pay(dataMidtransData.midtransToken.token, {
+      onSuccess: (result) => {
+        navigate('/histories')
+      }
+    }) 
+  }
+}, [dataMidtransData])
 
 const clickorderFull = () => {
+
   dataMidtrans({
     variables: {
       form: {
@@ -144,7 +110,8 @@ const clickorderFull = () => {
 
 
   return (
-
+    <>
+    <ToastContainer></ToastContainer>
     <div className="min-h-[100vh]  flex flex justify-center z-10">
       <Modal
         open={open}
@@ -157,7 +124,6 @@ const clickorderFull = () => {
             <div className="w-full flex justify-center">
                 <p className="text-2xl font-semibold">Pesan Sekarang</p>
             </div>
-            {/* card product */}
             <div className="w-full border-[1px] flex items-center p-2 rounded-lg mt-4">
                 <img src="https://images.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,c_fill,g_faces,w_80,h_80/v1491534752/assets/MWV_jewel_box_yvmjjd.webp" className="w-16 rounded-lg" alt="" />
                 <div className="ml-4">
@@ -191,10 +157,7 @@ const clickorderFull = () => {
             </button> : ''}
             <button onClick={clickorderFull} className="mt-2 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
                 <p>Full Payment {formatRupiah(totalPrice)}</p>
-            </button> 
-            {/* <button onClick={clickCreateOrder} className="mt-2 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
-                <p>Create Order</p>
-            </button> */}
+            </button>
           </div>
         </Box>
       </Modal>
@@ -252,7 +215,6 @@ const clickorderFull = () => {
             <Rating name="read-only size-small" size="small" value={data?.getProductById?.rating} precision={0.5} readOnly />
             </div>
             <p className="text-[10px] flex items-center font-light"> <RiMapPin2Line className="mr-[2px]"/> {data?.getProductById?.Vendor.city}, {data?.getProductById?.Vendor.province} </p>
-            
           </div>
         </div>
         <div className="w-full border-b-2 pb-10 py-2">
@@ -285,6 +247,43 @@ const clickorderFull = () => {
             <button className="border-[1px] rounded px-[2px] flex justify-center mt-2 hover:bg-gray-50">
                 <p className="text-[12px] font-[300]">Kunjungi Provil Vendor</p>
             </button>
+          </div>
+        </div>
+        <div className="py-4 w-full flex flex-col justify-center">
+          <div className="text-[18px]">TESTIMONI</div>
+          <div className="max-w-full mt-2 flex overflow-auto py-2">
+            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
+              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
+              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
+                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
+              </div>
+            </div>
+            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
+              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
+              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
+                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
+              </div>
+            </div>
+            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
+              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
+              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
+                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
+              </div>
+            </div>
+            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
+              <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
+              <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
+                <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -322,6 +321,7 @@ const clickorderFull = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

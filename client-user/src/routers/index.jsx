@@ -1,4 +1,4 @@
-import{createBrowserRouter} from 'react-router-dom'
+import{createBrowserRouter, redirect} from 'react-router-dom'
 import MainLayouts from '../layouts/MainLayouts'
 import Home from '../views/Home'
 import Products from '../views/Products'
@@ -36,11 +36,23 @@ const router = createBrowserRouter([
     },
     {
         path: '/login',
-        element: <Login/>
+        element: <Login/>,
+        loader: () => {
+            if (localStorage.getItem('token')) {
+                return redirect('/')
+            }
+            return null
+        }
     },
     {
         path: '/register',
-        element: <Register/>
+        element: <Register/>,
+        loader: () => {
+            if (!localStorage.getItem('token')) {
+                return redirect('/login')
+            }
+            return null
+        }
     }
     // {
     //     path: '/:id',

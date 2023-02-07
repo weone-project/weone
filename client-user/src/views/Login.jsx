@@ -32,7 +32,7 @@ const Login = () => {
         navigate('/')
       }
   }, [dataLoginUser])
-  console.log(dataLoginUser, errorLoginUser?.graphQLErrors[0].message);
+  // console.log(dataLoginUser, errorLoginUser?.graphQLErrors[0].message);
   return (
     <>
       <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
@@ -58,13 +58,6 @@ const Login = () => {
             </div>
           </div>
           <div className="flex mx-8">
-            <button className="mx-2 text-xl">
-              <HiChatBubbleLeftEllipsis />
-            </button>
-            <button className="mx-2 w-8">
-              {" "}
-              <img src={bride} alt="" />
-            </button>
           </div>
         </div>
       </section>
@@ -143,8 +136,8 @@ const Login = () => {
                   forgot password?
                 </a>
               </div>
-              <div className="w-full flex items-center justify-center mt-2">
-                asds
+              <div className="w-full flex items-center justify-center mt-2 text-[12px]">
+                Don't have an account? <Link to={'/register'} href="" className="text-red-700"> Register</Link>
               </div>
             </div>
             <div className="w-full bg-gray-100 h-[10%] rounded-b-lg flex items-center justify-center">

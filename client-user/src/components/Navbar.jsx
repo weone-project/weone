@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { HiChatBubbleLeftEllipsis } from "react-icons/hi2"
 import bride from '../bride.png'
 import logo from '../assets/logo/Logo-l.png'
@@ -8,6 +8,11 @@ import { HiLogout } from "react-icons/hi"
 import { BiLogOutCircle } from "react-icons/bi"
 
 const Navbar = () => {
+    const navigate = useNavigate()
+    const buttonLogOut = () => {
+        localStorage.clear()
+        navigate('/login')
+    }   
     return (
         <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
             <div className="flex w-full mx-[70px] justify-between items-center h-14">
@@ -22,6 +27,8 @@ const Navbar = () => {
                 </div>
                 </div>
                 <div className="flex ml-8 duration-200">
+                    {localStorage.getItem('token') ? 
+                    <>
                     <button className="mx-2 text-xl"><Link to={'/message'}> <HiChatBubbleLeftEllipsis/></Link></button>
                     <button className="mx-2 w-8 dropdown duration-200"><img src={bride} alt="" />
                         <div className="dropdown-content top-[30px] right-[-10px] rounded-lg text-sm pb-2">
@@ -49,12 +56,12 @@ const Navbar = () => {
                                     <p className="ml-4 font-[400]">Setting</p>
                                 </div>
                             </Link>
-                            <Link to={'/login'} className=" hover:bg-gray-200 items-center flex ">
+                            <div onClick={buttonLogOut} className=" hover:bg-gray-200 items-center flex py-2 pl-2">
                                 <div className=" flex items-center mt-2 duration-200">
                                     <BiLogOutCircle className="text-[20px] font-light ml-2"/>
                                     <p className="ml-4 font-[400]">Log Out</p>
                                 </div>
-                            </Link>
+                            </div>
                             {/* <div className="px-4 py-2 flex items-center mt-2 hover:bg-gray-200 duration-200">
                                 <HiSwatch className="text-[18px] font-bold ml-2"/>
                                 <p className="ml-4">Invitation</p>
@@ -67,6 +74,15 @@ const Navbar = () => {
                             <a href="#" className="rounded-lg">Invitation</a> */}
                         </div>
                     </button>
+                    </>
+                    :
+                    <>
+                    <button className="px-4 py-[3px] rounded-xl border-2">Register</button>
+                    <Link to={'/login'} className="px-4 py-[3px] rounded-xl border-2 ml-2 bg-[#645CBB] text-white">Login</Link>
+                    </>                     
+                    }
+
+
                 </div>
             </div>
         </section>
