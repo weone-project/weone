@@ -10,7 +10,7 @@ import logo from '../../assets/logo/Logo-l.png'
 function TemaPrev() {
 
 
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
 
     function formatDate(date) {
         return new Date(date).toLocaleDateString('id', 'ID')
@@ -61,16 +61,19 @@ function TemaPrev() {
     return (
         <>
 
-            <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20 opacity-60 ">
+            <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20 ">
                 <div className="flex w-full mx-[70px] justify-between items-center h-14">
-                            <button className="mx-4 hover:border-b-2 hover:border-[#645CBB]  border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Blue Sky</button>
+                <div>
+                        <Link to={'/invitations'}>
+                                <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300"> Blue Sky </button>
+                            </Link>
+                    </div>
+
                     {/* <div className="h-full flex items-center"><img src={logo} alt="" width={100} /></div> */}
                     <div className="h-10 flex h-full">
                         <div className="flex mx-8 font-light h-full ">
-                            <Link to={'/invitations'}>
-                                <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Back</button>
-                            </Link>
-                            <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] rounded-lg bg-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Buat Undangan Seperti ini</button>
+                            
+                            <button className="mx-4 hover:bg-purple-800 text-white rounded-lg bg-[#645CBB] border-b-2 border-white font-[500] p-2 focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Buat Undangan Seperti ini</button>
                         </div>
                     </div>
                 </div>
@@ -147,7 +150,7 @@ function TemaPrev() {
                                     className="relative w-full text-center font-bold tracking-wider text-sm uppercase py-4 z-10 text-black">
                                     The Wedding Of</p>
                                 <p
-                                    className="relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
+                                    className="nameWed relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
                                     {inv?.groom_nick}
                                     <span className="mx-4">&amp;</span>
                                     {inv?.bride_nick}
@@ -179,7 +182,7 @@ function TemaPrev() {
                                     <img className="object-cover object-top w-[100px] h-[100px] border-2 border-[#122851] rounded-full shadow-lg aos-init aos-animate"
                                         src={inv?.groom_img} alt="Male" data-aos="fade-right" />
                                     <div className="pl-6">
-                                        <p className="text-4xl">
+                                        <p className="nameWed text-5xl">
                                             {inv?.groom_nick}</p>
                                         <p className="font-light text-sm sm:text-base pb-2">{inv?.groom}</p>
                                         <p className="font-light text-sm sm:text-base">Putra dari</p>
@@ -191,7 +194,7 @@ function TemaPrev() {
                                     <img className="object-cover w-[100px] h-[100px] border-2 border-[#122851]  rounded-full shadow-lg aos-init aos-animate"
                                         src={inv?.bride_img} alt="Male" data-aos="fade-right" />
                                     <div className="pl-6">
-                                        <p className="text-4xl">
+                                        <p className="nameWed text-5xl">
                                             {inv?.bride_nick}</p>
                                         <p className="font-light text-sm sm:text-base pb-2">{inv?.bride}</p>
                                         <p className="font-light text-sm sm:text-base">Putri dari</p>

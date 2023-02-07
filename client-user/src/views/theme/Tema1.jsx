@@ -3,13 +3,13 @@ import { useQuery } from '@apollo/client';
 import { useParams } from "react-router-dom";
 import { React } from 'react';
 import { useState } from "react";
-import axios from 'axios'
+import '../../index.css'
 
 
 function Tema1() {
 
 
-        const [showModal, setShowModal] = useState(false);
+        const [showModal, setShowModal] = useState(true);
 
         function formatDate(date) {
             return new Date(date).toLocaleDateString('id', 'ID')
@@ -77,7 +77,7 @@ function Tema1() {
                                         <div>
                                             <p className="flex text-xl font-serif font-semibold items-center justify-center">Wedding Of</p>
                                             <div className="flex  items-center justify-center rounded-t">
-                                                <h3 className="text-3xl font-serif text-center text-black font-semibold">
+                                                <h3 className="nameWed text-5xl font-serif text-center text-black font-semibold">
                                                     {inv?.groom_nick} <span className="mx-4">&amp;</span>
                                                     {inv?.bride_nick}
                                                 </h3>
@@ -133,7 +133,7 @@ function Tema1() {
                                         className="relative w-full text-center font-bold tracking-wider text-sm uppercase py-4 z-10 text-black">
                                         The Wedding Of</p>
                                     <p
-                                        className="relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
+                                        className="nameWed name relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
                                         {inv?.groom_nick}
                                         <span className="mx-4">&amp;</span>
                                         {inv?.bride_nick}
@@ -165,7 +165,7 @@ function Tema1() {
                                         <img className="object-cover object-top w-[100px] h-[100px] border-2 border-[#122851] rounded-full shadow-lg aos-init aos-animate"
                                             src={inv?.groom_img} alt="Male" data-aos="fade-right" />
                                         <div className="pl-6">
-                                            <p className="text-4xl">
+                                            <p className="nameWed text-5xl">
                                                 {inv?.groom_nick}</p>
                                             <p className="font-light text-sm sm:text-base pb-2">{inv?.groom}</p>
                                             <p className="font-light text-sm sm:text-base">Putra dari</p>
@@ -177,7 +177,7 @@ function Tema1() {
                                         <img className="object-cover w-[100px] h-[100px] border-2 border-[#122851]  rounded-full shadow-lg aos-init aos-animate"
                                             src={inv?.bride_img} alt="Male" data-aos="fade-right" />
                                         <div className="pl-6">
-                                            <p className="text-4xl">
+                                            <p className="nameWed text-5xl">
                                                 {inv?.bride_nick}</p>
                                             <p className="font-light text-sm sm:text-base pb-2">{inv?.bride}</p>
                                             <p className="font-light text-sm sm:text-base">Putri dari</p>

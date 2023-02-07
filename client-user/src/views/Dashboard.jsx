@@ -620,16 +620,16 @@ function Dashboard() {
                       <div className="flex-wrap relative h-full">
                         <div className="absolute w-full h-full z-10 bg-gradient-to-t from-white to-transparent">
                         </div>
-                        <img className="w-full h-full object-cover object-top z-10" src={!dataInvitation?.photo ? "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f1251af3-c57d-4fc7-9107-4ed9e0f54241/dem9hee-b7bb3c39-21a9-4aee-bd02-01cb96bebb27.png/v1/fill/w_1280,h_536,q_80,strp/_insert_background_text_here__by_huddhiro_dem9hee-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTM2IiwicGF0aCI6IlwvZlwvZjEyNTFhZjMtYzU3ZC00ZmM3LTkxMDctNGVkOWUwZjU0MjQxXC9kZW05aGVlLWI3YmIzYzM5LTIxYTktNGFlZS1iZDAyLTAxY2I5NmJlYmIyNy5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.bM8DtR5JlGeNGdVFsifCZ2afk3vXmerQj6Pdasg5IUE" : dataInvitation?.photo} alt="" />
+                        <img className="w-full h-full object-cover object-top z-10" src={!dataInvitation?.photo ? "https://img.freepik.com/free-vector/green-purple-colourful-wedding-invitation-background-multipurpose-card-free-vector_1340-21784.jpg?w=2000" : dataInvitation?.photo} alt="" />
                         <div className="absolute w-full bottom-16">
                           <p
                             className="relative w-full text-center font-bold tracking-wider text-sm uppercase py-4 z-10 text-black">
                             The Wedding Of</p>
                           <p
-                            className="relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
-                            {dataInvitation?.groom_nick}
+                            className="nameWed text-5xl relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
+                            {!dataInvitation?.groom_nick ? "Putri" : dataInvitation?.groom_nick}
                             <span className="mx-4">&amp;</span>
-                            {dataInvitation?.bride_nick}
+                            {!dataInvitation?.bride_nick ? "Putra" : dataInvitation?.bride_nick}
                           </p>
                           <p
                             className="relative w-full text-center font-bold tracking-wider text-lg uppercase py-4 z-10 #949494">
@@ -656,9 +656,9 @@ function Dashboard() {
                         <div name="brideGroomContainer" className="py-8 px-4 mx-auto max-w-sm">
                           <div className="flex w-4/4 mx-auto">
                             <img className="object-cover object-top w-[100px] h-[100px] border-2 border-[#122851] rounded-full shadow-lg aos-init aos-animate"
-                              src={dataInvitation?.groom_img} alt="Male" data-aos="fade-right" />
+                              src={!dataInvitation?.groom_img ? "https://ionicframework.com/docs/img/demos/avatar.svg" : dataInvitation?.groom_img } alt="Male" data-aos="fade-right" />
                             <div className="pl-6">
-                              <p className="text-4xl">
+                              <p className="nameWed text-5xl">
                                 {dataInvitation?.groom_nick}</p>
                               <p className="font-light text-sm sm:text-base pb-2">{dataInvitation?.groom}</p>
                               <p className="font-light text-sm sm:text-base">Putra dari</p>
@@ -668,9 +668,9 @@ function Dashboard() {
                           </div>
                           <div className="flex w-4/4 mx-auto">
                             <img className="object-cover w-[100px] h-[100px] border-2 border-[#122851]  rounded-full shadow-lg aos-init aos-animate"
-                              src={dataInvitation?.bride_img} alt="Male" data-aos="fade-right" />
+                              src={!dataInvitation?.bride_img  ?"https://ionicframework.com/docs/img/demos/avatar.svg" : dataInvitation?.bride_img } alt="Male" data-aos="fade-right" />
                             <div className="pl-6">
-                              <p className="text-4xl">
+                              <p className="nameWed text-5xl">
                                 {dataInvitation?.bride_nick}</p>
                               <p className="font-light text-sm sm:text-base pb-2">{dataInvitation?.bride}</p>
                               <p className="font-light text-sm sm:text-base">Putri dari</p>
@@ -790,7 +790,7 @@ function Dashboard() {
                               data-lg-id="761d6d26-efd1-437c-a45b-b5d18c70df13" className="aos-init aos-animate">
 
                               <img className="h-44 w-28 max-h-28 mx-auto border-white shadow-lg object-cover"
-                                src={dataInvitation?.photo} alt="Galeri" />
+                                src={!dataInvitation?.photo ? "https://ionicframework.com/docs/img/demos/avatar.svg" : dataInvitation?.photo} alt="Galeri" />
                             </a>
                           </div>
                         </div>
