@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   HiChatBubbleLeftEllipsis,
   HiEnvelope,
@@ -9,7 +9,30 @@ import {
 } from "react-icons/hi2";
 import bride from "../bride.png";
 import logo from "../assets/logo/Logo-l.png";
+import { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { REGISTER_USER } from "../queries/user";
+
 const Register = () => {
+  const navigate = useNavigate()
+  const [dataRegister, setDataRegister] = useState({
+    email: "",
+    password: "",
+    name: "",
+    phoneNumber: "",
+    address: "",
+  });
+  const [dataUser, { loading, error }] = useMutation(REGISTER_USER)
+
+  const submitRegister = (e) => {
+    e.preventDefault();
+    dataUser({
+      variables: {
+        form: dataRegister
+      }
+    })
+    navigate('/login')
+  }
   return (
     <>
       <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
@@ -52,17 +75,6 @@ const Register = () => {
               <div className="w-full mt-2 mb-6">
                 <p className="text-xl font-semibold">REGISTER</p>
               </div>
-              <div className="w-full border-[1px] rounded-lg flex justify-center mt-2 py-2 items-center">
-                <img
-                  src="https://alexandra.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,c_fill,g_faces/assets/google-logo2x-rkgZVmis7.webp"
-                  className="w-[23px]"
-                  alt=""
-                />
-                <p className="mx-2 text-[13px] font-light">Google</p>
-              </div>
-              <div className="w-full flex justify-center my-2 py-2 items-center">
-                <p className="text-[10px] font-light">atau lanjutkan dengan</p>
-              </div>
               <div className="w-full">
                 {/* FORM */}
               <form action="">
@@ -76,6 +88,13 @@ const Register = () => {
                       placeholder="username"
                       name=""
                       id=""
+                      onChange={(e) => {
+                        setDataRegister({
+                          ...dataRegister,
+                          name: e.target.value,
+                        });
+                      }}
+                      
                     />
                   </div>
                 </div>
@@ -89,6 +108,12 @@ const Register = () => {
                       placeholder="email address"
                       name=""
                       id=""
+                      onChange={(e) => {
+                        setDataRegister({
+                          ...dataRegister,
+                          email: e.target.value,
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -102,6 +127,12 @@ const Register = () => {
                       placeholder="password"
                       name=""
                       id=""
+                      onChange={(e) => {
+                        setDataRegister({
+                          ...dataRegister,
+                          password: e.target.value,
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -111,10 +142,17 @@ const Register = () => {
                     <HiPhone className="absolute text-[#00425A] top-[12px] left-[7px]" />
                     <input
                       className="pl-10 duration-300 focus:outline-none outline-none focus:border-[#00425A] border-b-2 w-full py-2 font-light"
-                      type="password"
+                      type="text"
                       placeholder="phone number"
                       name=""
                       id=""
+                      onChange={(e) => {
+                        setDataRegister({
+                          ...dataRegister,
+                          phone: e.target.value,
+                        });
+
+                      }}
                     />
                   </div>
                 </div>
@@ -124,17 +162,26 @@ const Register = () => {
                     <HiHome className="absolute text-[#00425A] top-[12px] left-[7px]" />
                     <input
                       className="pl-10 duration-300 focus:outline-none outline-none focus:border-[#00425A] border-b-2 w-full py-2 font-light"
-                      type="password"
+                      type="text"
                       placeholder="address"
                       name=""
                       id=""
+                      onChange={(e) => {
+                        setDataRegister({
+                          ...dataRegister,
+                          address: e.target.value,
+                        });
+                      }}
                     />
                   </div>
                 </div>
-                <button className="w-full items-center justify-center flex mt-8 bg-[#00425A] hover:bg-[#674188] duration-200 h-[40px] text-white rounded-lg">
+                <button onClick={submitRegister} className="w-full items-center justify-center flex mt-8 bg-[#645CBB] hover:bg-[#674188] duration-200 h-[40px] text-white rounded-lg">
                   <p className="">Register</p>
                 </button>
               </form>
+              <div className="w-full flex justify-center text-[14px] mt-4">
+                <p>Back to <Link to={'/login'} className="text-red-700 hover:underline">Login</Link></p>
+              </div>
               </div>
             </div>
             <div className="w-full bg-gray-100 h-[10%] rounded-b-lg flex items-center justify-center mt-4">

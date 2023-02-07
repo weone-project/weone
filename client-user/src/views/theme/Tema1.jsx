@@ -3,7 +3,6 @@ import { useQuery } from '@apollo/client';
 import { useParams } from "react-router-dom";
 import { React } from 'react';
 import { useState } from "react";
-import axios from 'axios'
 
 
 function Tema1() {

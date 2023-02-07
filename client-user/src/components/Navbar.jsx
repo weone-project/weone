@@ -79,8 +79,8 @@ const Navbar = () => {
                     </>
                     :
                     <>
-                    <button className="px-4 py-[3px] rounded-xl border-2">Register</button>
-                    <Link to={'/login'} className="px-4 py-[3px] rounded-xl border-2 ml-2 bg-[#645CBB] text-white">Login</Link>
+                    <button className="px-4 py-[3px] rounded-xl border-2 hover:bg-gray-100 duration-200">Register</button>
+                    <Link to={'/login'} className="px-4 py-[3px] rounded-xl ml-2 duration-200 bg-[#645CBB] text-white hover:bg-[#674188]">Login</Link>
                     </>                     
                     }
 

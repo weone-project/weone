@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {HiOutlineShoppingBag } from 'react-icons/hi'
-import { GET_ORDERS } from '../queries/order';
+import { GET_ORDERS, UPDATE_ORDER } from '../queries/order';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import React, { useRef } from "react";
@@ -9,9 +9,11 @@ import Rating from '@mui/material/Rating';
 import { useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
+import loadingin from "../assets/53735-cart-icon-loader.gif";
 
 import "../style.css";
 import { GET_MIDTRANS } from '../queries/midtrans';
+import { CREATE_TESTIMONI } from '../queries/testimoni';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -24,19 +26,70 @@ const OrderHistory = () => {
     const navigate = useNavigate()
     const [newData, setNewData] = useState([])
     const [filter, setFilter] = useState('All')
-    const {data, loading, error} = useQuery(GET_ORDERS, {
+    const {data, loading, error, refetch} = useQuery(GET_ORDERS, {
         variables: {
             accessToken: localStorage.getItem('token')
-        }
+        },
+        fetchPolicy: 'no-cache'
+    })
+    const [dataTestimonial, { loading: loadingTestimonial, error: errorTestimonial, data: dataTestimonialData }] = useMutation(CREATE_TESTIMONI, {
+        refetchQueries: [{
+            query: GET_ORDERS,
+            variables: {
+                accessToken: localStorage.getItem('token')
+            }
+        }]
     })
     const [rating, setRating] = useState(0)
     const [review, setReview] = useState('')
     
+    const [open2, setOpen2] = React.useState(false);
+    const handleOpen2 = () => setOpen2(true);
+    const handleClose2 = () => setOpen2(false);
+
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const submitTestimoni = (id) => {
+        dataTestimonial({
+            variables: {
+                form: {
+                    rating: +rating,
+                    testimony: review,
+                    productId: +id,
+                },
+                accessToken: localStorage.getItem('token')
+            }
+        })
+        dataUpdate({
+            variables: {
+                form: {
+                    paymentStatus: 'DONEREVIEW'
+                },
+                orderId: +id,
+                accessToken: localStorage.getItem('token')
+            }
+        })
+        refetch()
+        handleClose()
+        // navigate('/histories')
+    }
 
-    const [dataMidtrans, { loading: loadingMidtrans, error: errorMidtrans, data: dataMidtransData }] = useMutation(GET_MIDTRANS)
+    useEffect(() => {
+        if (dataTestimonialData?.createTestimony) {
+            navigate('/histories')
+        }
+    }, [dataTestimonialData])
+
+    const [dataMidtrans, { loading: loadingMidtrans, error: errorMidtrans, data: dataMidtransData }] = useMutation(GET_MIDTRANS, {
+        refetchQueries: [{
+            query: GET_ORDERS,
+            variables: {
+                accessToken: localStorage.getItem('token')
+            },
+            awaitRefetchQueries: true,
+        }]
+    })
     const clickorderPay = ( id, quantity, ProductId, ProductPrice, ProductName, ProductImgUrl, ProductEstimatedDay, reservationDate, fullPayment, downPayment, notes ) => {
         dataMidtrans({
           variables: {
@@ -61,7 +114,8 @@ const OrderHistory = () => {
             window.snap.pay(dataMidtransData.midtransToken.token, {
                 onSuccess: (result) => {
                     console.log('success', result)
-                    navigate('/')
+                    // navigate('/')
+                    refetch()
                     // navigate('/histories')
                 }
             }) 
@@ -80,8 +134,6 @@ const OrderHistory = () => {
             setNewData(data2)
         }
     }, [filter, data])
-    
-
 
     useEffect(()=> {
         setNewData(data?.getOrdersUser)
@@ -109,10 +161,23 @@ const OrderHistory = () => {
         return date.toLocaleDateString("id", {year: 'numeric', month: 'long', day: 'numeric'})
     }
 
-    const submitTestimoni = () => {
-        console.log(rating, review)    
-    }
+    const [dataUpdate, { loading: loadingUpdate, error: errorUpdate, data: dataUpdateData }] = useMutation(UPDATE_ORDER, {
+        refetchQueries: [{
+            query: GET_ORDERS,
+            variables: {
+                accessToken: localStorage.getItem('token')
+            }
+        }],
+        awaitRefetchQueries: true,
+    })
 
+    if ( loading || loadingTestimonial || loadingMidtrans || loadingUpdate) {
+        return (
+            <div className="min-h-[100vh] bg-white flex justify-center items-center pb-20">
+                <img src={loadingin} className="w-[200px]" alt=""/>
+            </div>
+        )
+    }
     return (
         <div className="min-h-[100vh] bg-gray-50 flex flex-col items-center p-6">
 
@@ -131,6 +196,40 @@ const OrderHistory = () => {
                 console.log(item);
                 return (
                     <>
+                    <Modal
+                            open={open2}
+                            onClose={handleClose2}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style} className="border-b-2 bg-white rounded-xl h-[25em] w-[30em] ">
+                            <div className="w-full flex flex-col items-center px-8 py-4">
+                                <div className="w-full flex justify-center">
+                                    <p className="text-2xl font-semibold">Reschedule Date</p>
+                                </div>
+                                <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
+                                    <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                                    </div>
+                                    <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
+                                        <p className='font-semibold'>{item.Product.name}</p>
+                                        <div className='flex'>
+                                        </div>
+                                        <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                        <p className='text-[11px]'>Reservation Date: {formatDate(item.reservationDate)}</p>
+                                    </div>
+                                </div>
+                                <div className='w-full mt-4 flex flex-col items-center'>
+                                    <p className='text-[20px] font-semibold'>Change Date</p>
+                                    <input type="date" />
+                                </div>
+                                <button className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
+                                    <p>Submit</p>
+                                </button>
+                            </div>
+                            </Box>
+                        </Modal>
+
+                        {/* INI MODAL REVIEW */}
                     <Modal
                             open={open}
                             onClose={handleClose}
@@ -177,7 +276,9 @@ const OrderHistory = () => {
                                         }}
                                     />
                                 </div>
-                                <button onClick={submitTestimoni} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
+                                <button onClick={() => {
+                                    submitTestimoni(    item.id    )
+                                }} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
                                     <p>Submit</p>
                                 </button>
                             </div>
@@ -199,11 +300,11 @@ const OrderHistory = () => {
                                 <p className='font-semibold'>{item.Product.name}</p>
                                 <div className='flex'>
                                 <p className='text-[11px]'>Reservation date:  {formatDate(item.reservationDate)}</p>
-                                <button className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
+                                <button onClick={handleOpen2} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
                                 </div>
                                 <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
                             </div>
-                            {item.paymentStatus === 'DP' ? 
+                            { item.paymentStatus === 'DP' ? 
                             <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center'>
                                 <p className='text-[11px]'>remaining payment: <span className='font-semibold'> {formatRupiah(item.fullPayment-item.downPayment)}</span></p>
                                 <p className='text-[11px]'>payment due: <span className='font-semibold'>{
@@ -216,11 +317,17 @@ const OrderHistory = () => {
                                 {/* <p className='text-[11px]'>Total Transaction</p>
                                 <p className='text-[13px]'>IDR 500.000.000,00</p> */}
                             </div> : 
+                            ''
+                            }
+                            {item.paymentStatus === 'DONE' ? 
                             <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center'>
                                 <button onClick={handleOpen} className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
                                 </button>
-                            </div>
-                            }
+                            </div> : ''}
+                            { item.paymentStatus === 'DONEREVIEW' ? 
+                            <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
+                                <p>Thanks</p>
+                            </div> : ''}
                         </div>
                         <div className="flex items-center w-full mt-2 justify-end">
                         </div>

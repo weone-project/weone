@@ -114,3 +114,17 @@ code {
   height: 100%;
   object-fit: cover;
 }
+
+.login{
+  background:
+  linear-gradient(to right,
+   rgba(255, 255, 255, 0.448), 
+   rgba(255, 255, 255, 0.468),  
+   rgba(255, 255, 255, 0.293),  
+   rgba(255, 255, 255, 0.401)),  
+   url(https://cdn.pixabay.com/photo/2019/06/25/04/01/wedding-4297343__480.jpg);
+  object-fit: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: white;
+}

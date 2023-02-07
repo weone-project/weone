@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { GET_CATEGORY } from "../queries/category";
+import loadingin from "../assets/53735-cart-icon-loader.gif";
 
 
 const Products = () => {
@@ -81,22 +82,26 @@ const Products = () => {
         };
         
         const [open, setOpen] = React.useState(false);
-        // const openCategory = () => {
-        //     setShow(true);
-        // }
-        
-        // const closeCategory = () => {
-        //     setShow(false);
-        // }
+
+        if (loading || loadingCategory) {
+            
+            return (
+                <div className="min-h-[100vh] bg-white flex justify-center items-center pb-20">
+                    <img src={loadingin} className="w-[200px]" alt="" />
+                </div>
+                // <div>sdsad</div>
+            )
+        }
         
         
         return (
             <section className="min-h-[100vh] bg-gray-50 flex flex-col items-center pb-20">
+                {/* <img src={loadingin} alt="" className="w-[200px]" />sads */}
             <div className="mt-8 w-full flex justify-center">
             </div>
-            <div className="flex h-full flex-col items-center mt-10">
-                <div className="flex w-full bg-white p-2 rounded flex-col">
-                    <p>
+            <div className="flex h-full flex-col items-center mt-4">
+                <div className="flex w-full bg-white py-2 px-4 rounded flex-col">
+                    <p className="ml-2 my-2">
                         Filter
                     </p>
                     <div className="flex w-full">
@@ -138,6 +143,7 @@ const Products = () => {
                             {/* <MenuItem value={5}>5</MenuItem> */}
                         </Select>
                     </FormControl>
+
 
                         {/* <button onClick={() => {
                             setFilter({
