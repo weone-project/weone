@@ -10,6 +10,12 @@ body {
 }
 /* @import url('https://fonts.googleapis.com/css2?family=Sassy+Frass&display=swap'); */
 
+@import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
+
+.nameWed {
+  font-family: 'Imperial Script', cursive;
+}
+
 .map-container {
   height: 400px;
   }

@@ -7,7 +7,8 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useMutation } from "@apollo/client";
 import { POST_INVITATION } from "../queries/invitation";
-import { PickerOverlay } from 'filestack-react';
+import { client } from 'filestack-react';
+import logo from '../assets/logo/Logo-l.png'
 
 function Dashboard() {
 
@@ -15,7 +16,7 @@ function Dashboard() {
 
 
 
-  
+
   const [dataInvitation, setDataInvitation] = useState({
     quote: '',
     quote_src: '',
@@ -62,9 +63,6 @@ function Dashboard() {
     });
   });
 
-  let lokasi_peta = ''
-  let marker
-
 
   useEffect(() => {
     if (!map.current) return;
@@ -100,7 +98,6 @@ function Dashboard() {
   });
 
 
-
   const [FormInvitation, { data: dataInvitationNew, error: errorLoginUser }] = useMutation(POST_INVITATION, {
     variables: {
       accessToken: localStorage.getItem('token')
@@ -131,10 +128,9 @@ function Dashboard() {
     }
   }, [dataInvitationNew])
 
-  console.log(dataInvitation.quote_src)
 
   function formatDate(date) {
-    return new Date(date).toLocaleDateString('id-ID', { year: 'numeric' })
+    return new Date(date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })
   }
 
   function formatYear(date) {
@@ -155,17 +151,113 @@ function Dashboard() {
 
   const qrcode = ``
 
+
+  function uploadGalery() {
+    
+  const options = {
+    accept: 'image/*',
+    fromSources: ['local_file_system'],
+    maxSize: 1024 * 1024,
+    maxFiles: 1,
+    onFileUploadFinished(file) {
+      let { url } = file
+      setDataInvitation({
+        ...dataInvitation,
+        photo: url
+      })
+      console.log(url)
+    }
+  }
+
+  const filestack_apikey = "A2kZq9JveTiSdFlTxAk1jz" //replace with your api key
+  const filestack = client.init(filestack_apikey, options);
+  const picker = filestack.picker(options);
+    return picker.open();
+  }
+
+  
+  function uploadStory() {
+    
+    const options = {
+      accept: 'image/*',
+      fromSources: ['local_file_system'],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file
+        setDataInvitation({
+          ...dataInvitation,
+          story_img: url
+        })
+        console.log(url)
+      }
+    }
+  
+    const filestack_apikey = "A2kZq9JveTiSdFlTxAk1jz" //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+      return picker.open();
+    }
+
+    
+  function uploadBride() {
+    
+    const options = {
+      accept: 'image/*',
+      fromSources: ['local_file_system'],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file
+        setDataInvitation({
+          ...dataInvitation,
+          bride_img: url
+        })
+        console.log(url)
+      }
+    }
+  
+    const filestack_apikey = "A2kZq9JveTiSdFlTxAk1jz" //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+      return picker.open();
+    }
+
+    
+  function uploadgroom() {
+    
+    const options = {
+      accept: 'image/*',
+      fromSources: ['local_file_system'],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file
+        setDataInvitation({
+          ...dataInvitation,
+          groom_img: url
+        })
+        console.log(url)
+      }
+    }
+  
+    const filestack_apikey = "A2kZq9JveTiSdFlTxAk1jz" //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+      return picker.open();
+    }
+
+
+
   return (
     <>
 
       <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
         <div className="flex w-full mx-[70px] justify-between items-center h-14">
-          <div className="h-full flex items-center"><Link to={'/'} className="judul"><img src="logo" alt="" width={100} /></Link></div>
+          <div className="h-full flex items-center"><img src={logo} alt="" width={100} /></div>
           <div className="h-10 flex h-full">
             <div className="flex mx-8 font-light h-full ">
-              <Link to={'/products'}>
-                <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Products</button>
-              </Link>
+              <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Products</button>
               <Link to={'/invitations'}>
                 <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Invitations</button>
               </Link>
@@ -184,7 +276,6 @@ function Dashboard() {
                 <div className="w-full ">
                   <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
                     <p className="font-extrabold text-2xl">Buat Undangan</p>
-                    <p>{dataInvitation.quote_src}</p>
 
                     <div className="mt-10">
                       <form>
@@ -210,8 +301,14 @@ function Dashboard() {
                         <div className="flex justify-center mt-5">
                           <div className="mt-4 w-1/2 mr-5">
                             <label className="mb-2.5 block font-extrabold">Mempelai Wanita</label>
+                            
+                            <img className="w-32 h-32 mb-2" src={!dataInvitation?.bride_img ? "https://icons-for-free.com/iconfiles/png/512/cloud+upload+file+storage+upload+icon-1320190558968694328.png" : dataInvitation?.bride_img} alt="" />
+                          
+                          <button type="button" onClick={uploadBride}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Upload Foto
+                          </button>
                             <input type="text"
-                              className="inline-block w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
+                              className="inline-block mt-2 w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                               onChange={(e) => {
                                 setDataInvitation({
                                   ...dataInvitation,
@@ -228,7 +325,7 @@ function Dashboard() {
                                 })
                               }}
                               placeholder="Nama Panggilan" />
-                            <input type="text"
+                            {/* <input type="text"
                               className="inline-block w-full rounded-xl mt-4 bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                               onChange={(e) => {
                                 setDataInvitation({
@@ -236,7 +333,7 @@ function Dashboard() {
                                   bride_img: e.target.value
                                 })
                               }}
-                              placeholder="Url Image" />
+                              placeholder="Url Image" /> */}
                             <input type="text"
                               className="inline-block w-full rounded-xl mt-4 bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                               onChange={(e) => {
@@ -258,8 +355,14 @@ function Dashboard() {
                           </div>
                           <div className="mt-4  w-1/2">
                             <label className="mb-2.5 block font-extrabold">Mempelai Pria</label>
+                            
+                            <img className="w-32 h-32 mb-2" src={!dataInvitation?.groom_img ? "https://icons-for-free.com/iconfiles/png/512/cloud+upload+file+storage+upload+icon-1320190558968694328.png" : dataInvitation?.groom_img} alt="" />
+                          
+                          <button type="button" onClick={uploadgroom}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Upload Foto
+                          </button>
                             <input type="text"
-                              className="inline-block w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
+                              className="inline-block mt-2 w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                               onChange={(e) => {
                                 setDataInvitation({
                                   ...dataInvitation,
@@ -276,7 +379,7 @@ function Dashboard() {
                                 })
                               }}
                               placeholder="Nama Panggilan" />
-                            <input type="text"
+                            {/* <input type="text"
                               className="inline-block w-full rounded-xl mt-4 bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                               onChange={(e) => {
                                 setDataInvitation({
@@ -284,7 +387,7 @@ function Dashboard() {
                                   groom_img: e.target.value
                                 })
                               }}
-                              placeholder="Url Image" />
+                              placeholder="Url Image" /> */}
                             <input type="text"
                               className="inline-block w-full rounded-xl mt-4 bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                               onChange={(e) => {
@@ -410,7 +513,7 @@ function Dashboard() {
 
                           <div id="peta" className="peta w-full h-[500px] rounded-md"></div>
                           <input type="text" id="koordinat"
-                            className=" w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
+                            className=" w-full hidden rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                             // onChange={(e) => {
                             //   setDataInvitation({
                             //     ...dataInvitation,
@@ -420,16 +523,13 @@ function Dashboard() {
                             placeholder="Masukan Alamat" />
                         </div>
                         <div className=" mt-5">
+
                           <label className="mb-2.5 block font-extrabold">Galeri Foto</label>
-                          <input type="text"
-                            className="inline-block w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
-                            onChange={(e) => {
-                              setDataInvitation({
-                                ...dataInvitation,
-                                photo: e.target.value
-                              })
-                            }}
-                            placeholder="Tambah Foto" />
+                        <img className="w-32 h-32 mb-2" src={!dataInvitation?.photo ? "https://icons-for-free.com/iconfiles/png/512/cloud+upload+file+storage+upload+icon-1320190558968694328.png" : dataInvitation?.photo} alt="" />
+                          
+                          <button type="button" onClick={uploadGalery}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Upload Foto
+                          </button>
                         </div>
                         <div className=" mt-5">
                           <label className="mb-2.5 block font-extrabold">Kisah Cinta</label>
@@ -445,7 +545,7 @@ function Dashboard() {
                         </div>
                         <div className=" mt-5">
                           <label className="mb-2.5 block font-extrabold">Foto Story</label>
-                          <input type="text"
+                          {/* <input type="text"
                             className="inline-block w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                             onChange={(e) => {
                               setDataInvitation({
@@ -453,7 +553,12 @@ function Dashboard() {
                                 story_img: e.target.value
                               })
                             }}
-                            placeholder="Foto Story" />
+                            placeholder="Foto Story" /> */}
+                            <img className="w-32 h-32 mb-2" src={!dataInvitation?.story_img ? "https://icons-for-free.com/iconfiles/png/512/cloud+upload+file+storage+upload+icon-1320190558968694328.png" : dataInvitation?.story_img} alt="" />
+                          
+                          <button type="button" onClick={uploadStory}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Upload Foto
+                          </button>
                         </div>
                         <div className=" mt-5">
                           <label className="mb-2.5 block font-extrabold">Dompet Digital</label>
@@ -515,20 +620,20 @@ function Dashboard() {
                       <div className="flex-wrap relative h-full">
                         <div className="absolute w-full h-full z-10 bg-gradient-to-t from-white to-transparent">
                         </div>
-                        <img className="w-full h-full object-cover object-top z-10" src={!dataInvitation?.photo ? "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f1251af3-c57d-4fc7-9107-4ed9e0f54241/dem9hee-b7bb3c39-21a9-4aee-bd02-01cb96bebb27.png/v1/fill/w_1280,h_536,q_80,strp/_insert_background_text_here__by_huddhiro_dem9hee-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTM2IiwicGF0aCI6IlwvZlwvZjEyNTFhZjMtYzU3ZC00ZmM3LTkxMDctNGVkOWUwZjU0MjQxXC9kZW05aGVlLWI3YmIzYzM5LTIxYTktNGFlZS1iZDAyLTAxY2I5NmJlYmIyNy5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.bM8DtR5JlGeNGdVFsifCZ2afk3vXmerQj6Pdasg5IUE" : dataInvitation?.photo} alt="" />
+                        <img className="w-full h-full object-cover object-top z-10" src={!dataInvitation?.photo ? "https://img.freepik.com/free-vector/green-purple-colourful-wedding-invitation-background-multipurpose-card-free-vector_1340-21784.jpg?w=2000" : dataInvitation?.photo} alt="" />
                         <div className="absolute w-full bottom-16">
                           <p
                             className="relative w-full text-center font-bold tracking-wider text-sm uppercase py-4 z-10 text-black">
                             The Wedding Of</p>
                           <p
-                            className="relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
-                            {dataInvitation?.groom_nick}
+                            className="nameWed text-5xl relative w-full text-center text-5xl tracking-wide z-10 md:text-7xl text-black">
+                            {!dataInvitation?.groom_nick ? "Putri" : dataInvitation?.groom_nick}
                             <span className="mx-4">&amp;</span>
-                            {dataInvitation?.bride_nick}
+                            {!dataInvitation?.bride_nick ? "Putra" : dataInvitation?.bride_nick}
                           </p>
                           <p
                             className="relative w-full text-center font-bold tracking-wider text-lg uppercase py-4 z-10 #949494">
-                            {formatDate(dataInvitation?.ceremonial_date)} </p>
+                            {formatDate(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)} </p>
                         </div>
                       </div>
                     </div>
@@ -551,9 +656,9 @@ function Dashboard() {
                         <div name="brideGroomContainer" className="py-8 px-4 mx-auto max-w-sm">
                           <div className="flex w-4/4 mx-auto">
                             <img className="object-cover object-top w-[100px] h-[100px] border-2 border-[#122851] rounded-full shadow-lg aos-init aos-animate"
-                              src={dataInvitation?.groom_img} alt="Male" data-aos="fade-right" />
+                              src={!dataInvitation?.groom_img ? "https://ionicframework.com/docs/img/demos/avatar.svg" : dataInvitation?.groom_img } alt="Male" data-aos="fade-right" />
                             <div className="pl-6">
-                              <p className="text-4xl">
+                              <p className="nameWed text-5xl">
                                 {dataInvitation?.groom_nick}</p>
                               <p className="font-light text-sm sm:text-base pb-2">{dataInvitation?.groom}</p>
                               <p className="font-light text-sm sm:text-base">Putra dari</p>
@@ -563,9 +668,9 @@ function Dashboard() {
                           </div>
                           <div className="flex w-4/4 mx-auto">
                             <img className="object-cover w-[100px] h-[100px] border-2 border-[#122851]  rounded-full shadow-lg aos-init aos-animate"
-                              src={dataInvitation?.bride_img} alt="Male" data-aos="fade-right" />
+                              src={!dataInvitation?.bride_img  ?"https://ionicframework.com/docs/img/demos/avatar.svg" : dataInvitation?.bride_img } alt="Male" data-aos="fade-right" />
                             <div className="pl-6">
-                              <p className="text-4xl">
+                              <p className="nameWed text-5xl">
                                 {dataInvitation?.bride_nick}</p>
                               <p className="font-light text-sm sm:text-base pb-2">{dataInvitation?.bride}</p>
                               <p className="font-light text-sm sm:text-base">Putri dari</p>
@@ -591,13 +696,13 @@ function Dashboard() {
                                 </div>
                                 <p className="text-md text-center uppercase text-gray-700 tracking-wide"
                                 >{
-                                    formatMonth(dataInvitation?.matrimony_date)
+                                    formatMonth(!dataInvitation?.matrimony_date ? Date.now() : dataInvitation?.matrimony_date)
                                   }</p>
                                 <p className="text-3xl font-semibold text-center text-gray-700 tracking-wide">{
-                                  formatDayn(dataInvitation?.matrimony_date)
+                                  formatDayn(!dataInvitation?.matrimony_date ? Date.now() : dataInvitation?.matrimony_date)
                                 }</p>
                                 <p className="text-2xl sm:text-base text-center text-gray-700 tracking-wide">{
-                                  formatYear(dataInvitation?.matrimony_date)
+                                  formatYear(!dataInvitation?.matrimony_date ? Date.now() : dataInvitation?.matrimony_date)
                                 }</p>
                                 <div className="top-6 left-16 w-max absolute">
                                   <p className="text-xs w-28 font-light text-center uppercase border-t border-b border-gray-900 py-2 px-2 text-gray-700 tracking-wide"
@@ -622,18 +727,18 @@ function Dashboard() {
                                 <div className="top-6 right-16 w-max absolute">
                                   <p className="text-xs w-28 font-light text-center uppercase border-t border-b border-gray-900 py-2 px-2 tracking-widest"
                                   >{
-                                      formatDay(dataInvitation?.ceremonial_date)
+                                      formatDay(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)
                                     }</p>
                                 </div>
                                 <p className="text-md text-center uppercase text-gray-700 tracking-wide"
                                 >{
-                                    formatMonth(dataInvitation?.ceremonial_date)
+                                    formatMonth(!dataInvitation?.ceremonial_date ? Date.now : dataInvitation?.ceremonial_date)
                                   }</p>
                                 <p className="text-3xl font-semibold text-center text-gray-700 tracking-wide">{
-                                  formatDayn(dataInvitation?.ceremonial_date)
+                                  formatDayn(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)
                                 }</p>
                                 <p className="text-2xl sm:text-base text-center text-gray-700 tracking-wide">{
-                                  formatYear(dataInvitation?.ceremonial_date)
+                                  formatYear(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)
                                 }</p>
                                 <div className="top-6 left-16 w-max absolute">
                                   <p className="text-xs w-28 font-light text-center uppercase border-t border-b border-gray-900 py-2 px-2 text-gray-700 tracking-wide"
@@ -685,7 +790,7 @@ function Dashboard() {
                               data-lg-id="761d6d26-efd1-437c-a45b-b5d18c70df13" className="aos-init aos-animate">
 
                               <img className="h-44 w-28 max-h-28 mx-auto border-white shadow-lg object-cover"
-                                src={dataInvitation?.photo} alt="Galeri" />
+                                src={!dataInvitation?.photo ? "https://ionicframework.com/docs/img/demos/avatar.svg" : dataInvitation?.photo} alt="Galeri" />
                             </a>
                           </div>
                         </div>
@@ -757,10 +862,10 @@ function Dashboard() {
                             </div>
                           </div>
 
-
+{/* 
                           <img className="mx-auto w-40 h-40" id='barcode'
                             src={qrcode} alt="" />
-                          <p className="text-center mt-5">Tunjukan QR CODE ini  untuk isi buku tamu online</p>
+                          <p className="text-center mt-5">Tunjukan QR CODE ini  untuk isi buku tamu online</p> */}
 
                           <div name="guestContainer" className="py-8 px-8 lg:px-4 mx-auto max-w-lg pt-16">
                             <h2 className="text-center text-[#122851] text-3xl sm:text-4xl aos-init aos-animate"
@@ -787,7 +892,7 @@ function Dashboard() {
                                 <div className="my-4">
                                   <button type="submit"
                                     className="rounded-lg  bg-blue-900 shadow  text-white focus:outline-none focus:ring focus:ring-blue-300 block w-full p-2.5 aos-init aos-animate"
-                                    data-aos="zoom-in-up" data-aos-duration="1000">kirim Ucapan</button>
+                                    data-aos="zoom-in-up" data-aos-duration="1000" disabled>kirim Ucapan</button>
                                 </div>
                               </form>
 
@@ -811,7 +916,7 @@ function Dashboard() {
             </div>
 
             <p className="text-center text-sm text-gray-500 my-10">
-              &copy; 2022 <a href="#" className="hover:underline">Hariistimewa</a>. All rights reserved.
+              &copy; 2023 <a href="#" className="hover:underline">Wedding One</a>. All rights reserved.
             </p>
           </div>
         </div>
