@@ -10,7 +10,7 @@ import Message from '../views/Message'
 import Tema1 from '../views/theme/Tema1'
 import Dashboard from '../views/Dashboard'
 import InvitationTheme from '../views/InvitationTheme'
-import TemaAdd from '../views/theme/TemaAdd copy'
+import TemaPrev from '../views/theme/TemaPrev'
 
 
 const router = createBrowserRouter([
@@ -73,8 +73,8 @@ const router = createBrowserRouter([
     },            
     {
         path: '/prev',
-        element: <TemaAdd/>
-    },
+        element: <TemaPrev/>
+    },  
 ])
 
 export default router

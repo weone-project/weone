@@ -10,7 +10,6 @@ import { POST_INVITATION } from "../queries/invitation";
 import { client } from 'filestack-react';
 import logo from '../assets/logo/Logo-l.png'
 
-
 function Dashboard() {
 
 
@@ -131,7 +130,7 @@ function Dashboard() {
 
 
   function formatDate(date) {
-    return new Date(date).toLocaleDateString('id-ID', { year: 'numeric' })
+    return new Date(date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })
   }
 
   function formatYear(date) {
@@ -546,7 +545,7 @@ function Dashboard() {
                         </div>
                         <div className=" mt-5">
                           <label className="mb-2.5 block font-extrabold">Foto Story</label>
-                          <input type="text"
+                          {/* <input type="text"
                             className="inline-block w-full rounded-xl bg-white p-2.5 leading-none text-black placeholder-stone-500 shadow focus:outline-none focus:ring focus:ring-pink-300"
                             onChange={(e) => {
                               setDataInvitation({
@@ -554,7 +553,12 @@ function Dashboard() {
                                 story_img: e.target.value
                               })
                             }}
-                            placeholder="Foto Story" />
+                            placeholder="Foto Story" /> */}
+                            <img className="w-32 h-32 mb-2" src={!dataInvitation?.story_img ? "https://icons-for-free.com/iconfiles/png/512/cloud+upload+file+storage+upload+icon-1320190558968694328.png" : dataInvitation?.story_img} alt="" />
+                          
+                          <button type="button" onClick={uploadStory}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Upload Foto
+                          </button>
                         </div>
                         <div className=" mt-5">
                           <label className="mb-2.5 block font-extrabold">Dompet Digital</label>
@@ -629,7 +633,7 @@ function Dashboard() {
                           </p>
                           <p
                             className="relative w-full text-center font-bold tracking-wider text-lg uppercase py-4 z-10 #949494">
-                            {formatDate(dataInvitation?.ceremonial_date)} </p>
+                            {formatDate(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)} </p>
                         </div>
                       </div>
                     </div>
@@ -692,13 +696,13 @@ function Dashboard() {
                                 </div>
                                 <p className="text-md text-center uppercase text-gray-700 tracking-wide"
                                 >{
-                                    formatMonth(dataInvitation?.matrimony_date)
+                                    formatMonth(!dataInvitation?.matrimony_date ? Date.now() : dataInvitation?.matrimony_date)
                                   }</p>
                                 <p className="text-3xl font-semibold text-center text-gray-700 tracking-wide">{
-                                  formatDayn(dataInvitation?.matrimony_date)
+                                  formatDayn(!dataInvitation?.matrimony_date ? Date.now() : dataInvitation?.matrimony_date)
                                 }</p>
                                 <p className="text-2xl sm:text-base text-center text-gray-700 tracking-wide">{
-                                  formatYear(dataInvitation?.matrimony_date)
+                                  formatYear(!dataInvitation?.matrimony_date ? Date.now() : dataInvitation?.matrimony_date)
                                 }</p>
                                 <div className="top-6 left-16 w-max absolute">
                                   <p className="text-xs w-28 font-light text-center uppercase border-t border-b border-gray-900 py-2 px-2 text-gray-700 tracking-wide"
@@ -723,18 +727,18 @@ function Dashboard() {
                                 <div className="top-6 right-16 w-max absolute">
                                   <p className="text-xs w-28 font-light text-center uppercase border-t border-b border-gray-900 py-2 px-2 tracking-widest"
                                   >{
-                                      formatDay(dataInvitation?.ceremonial_date)
+                                      formatDay(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)
                                     }</p>
                                 </div>
                                 <p className="text-md text-center uppercase text-gray-700 tracking-wide"
                                 >{
-                                    formatMonth(dataInvitation?.ceremonial_date)
+                                    formatMonth(!dataInvitation?.ceremonial_date ? Date.now : dataInvitation?.ceremonial_date)
                                   }</p>
                                 <p className="text-3xl font-semibold text-center text-gray-700 tracking-wide">{
-                                  formatDayn(dataInvitation?.ceremonial_date)
+                                  formatDayn(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)
                                 }</p>
                                 <p className="text-2xl sm:text-base text-center text-gray-700 tracking-wide">{
-                                  formatYear(dataInvitation?.ceremonial_date)
+                                  formatYear(!dataInvitation?.ceremonial_date ? Date.now() : dataInvitation?.ceremonial_date)
                                 }</p>
                                 <div className="top-6 left-16 w-max absolute">
                                   <p className="text-xs w-28 font-light text-center uppercase border-t border-b border-gray-900 py-2 px-2 text-gray-700 tracking-wide"
