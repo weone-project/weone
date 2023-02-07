@@ -55,7 +55,6 @@ const router = createBrowserRouter([
     },
     {
         path: '/register',
-<<<<<<< HEAD
         element: <Register/>,
         loader: () => {
             if (!localStorage.getItem('token')) {
@@ -63,14 +62,7 @@ const router = createBrowserRouter([
             }
             return null
         }
-    }
-    // {
-    //     path: '/:id',
-    //     element: <ItemDetail/>
-    // }
-=======
-        element: <Register/>
-    },               
+    },        
     {
         path: '/inv',
         element: <Dashboard/>
@@ -83,7 +75,6 @@ const router = createBrowserRouter([
         path: '/prev',
         element: <TemaAdd/>
     },
->>>>>>> invitation
 ])
 
 export default router
