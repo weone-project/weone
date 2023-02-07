@@ -7,6 +7,11 @@ import Login from '../views/Login'
 import Register from '../views/Register'
 import OrderHistory from '../views/OrderHistory'
 import Message from '../views/Message'
+import Tema1 from '../views/theme/Tema1'
+import Dashboard from '../views/Dashboard'
+import InvitationTheme from '../views/InvitationTheme'
+import TemaAdd from '../views/theme/TemaAdd copy'
+
 
 const router = createBrowserRouter([
     {
@@ -19,7 +24,7 @@ const router = createBrowserRouter([
             {
                 path: '/products',
                 element: <Products/>
-            },
+            }, 
             {
                 path:'/products/:id',
                 element: <DetailProduct/>
@@ -31,7 +36,11 @@ const router = createBrowserRouter([
             {
                 path: '/message',
                 element: <Message/>
-            }
+            },
+            {
+                path: '/invitations',
+                element: <InvitationTheme/>
+            }, 
         ]
     },
     {
@@ -46,6 +55,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/register',
+<<<<<<< HEAD
         element: <Register/>,
         loader: () => {
             if (!localStorage.getItem('token')) {
@@ -58,6 +68,22 @@ const router = createBrowserRouter([
     //     path: '/:id',
     //     element: <ItemDetail/>
     // }
+=======
+        element: <Register/>
+    },               
+    {
+        path: '/inv',
+        element: <Dashboard/>
+    },             
+    {
+        path: '/t1/:id',
+        element: <Tema1/>
+    },            
+    {
+        path: '/prev',
+        element: <TemaAdd/>
+    },
+>>>>>>> invitation
 ])
 
 export default router
