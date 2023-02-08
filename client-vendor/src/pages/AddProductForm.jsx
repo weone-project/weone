@@ -22,7 +22,7 @@ const createProduct = gql`
   }
 `;
 
-function RegisterForm() {
+function AddProductForm() {
   const navigate = useNavigate();
   const input = {
     name: "",
@@ -169,4 +169,4 @@ function RegisterForm() {
     );
   }
 }
-export default RegisterForm;
+export default AddProductForm;

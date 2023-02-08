@@ -98,7 +98,7 @@ function ProductCards({ el, refetch }) {
               <hr />
               <div className="d-flex flex-row justify-content-between">
                 <h5 className="fw-bold">Product Information</h5>
-                <Link to="/editProducts/:productId" className="btn btn-primary btn-sm">
+                <Link to={`/editProducts/${el.id}`} className="btn btn-primary btn-sm">
                   Edit Product
                 </Link>
               </div>

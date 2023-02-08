@@ -6,6 +6,7 @@ import AllProducts from '../pages/AllProducts'
 import AllOrders from '../pages/AllOrders'
 import AddProductForm from '../pages/AddProductForm'
 import EditProductForm from '../pages/EditProductForm'
+import MsgRoom from "../pages/Message"
 // import EditProfile from '../pages/EditProfile'
 // import Profile from '../pages/Profile'
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
         {
           path: "/editProducts/:productId",
           element: <EditProductForm />,
+        },
+        {
+          path: "/messege",
+          element: <MsgRoom />,
         },
         // {
         //   path: "/profile/:vendorId",

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { gql, useMutation } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 const updateReschedule = gql`
   mutation Mutation($accessToken: String, $form: reschedule, $orderId: ID) {
@@ -11,7 +12,6 @@ const updateReschedule = gql`
 `;
 
 function OrderRow({ el, i, refetch }) {
-  
   const [modalShow, setModalShow] = useState(false);
   const [updateRescheduleStatus, { data: dataRescheduleStatus }] = useMutation(updateReschedule);
 
@@ -27,11 +27,11 @@ function OrderRow({ el, i, refetch }) {
     });
   };
 
-  useEffect (() => {
+  useEffect(() => {
     if (dataRescheduleStatus) {
-      refetch()
+      refetch();
     }
-  }, [dataRescheduleStatus])
+  }, [dataRescheduleStatus]);
 
   return (
     <tr>
@@ -56,12 +56,14 @@ function OrderRow({ el, i, refetch }) {
       <>
         <Modal show={modalShow} onHide={() => setModalShow(false)} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
           <Modal.Header closeButton>
-            <Modal.Title className="fs-bold">Order Detail #id</Modal.Title>
+            <Modal.Title className="fs-bold">Detail Order ID #{el.id}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="d-flex flex-row justify-content-between">
               <h5 className="fw-bold">Customer Information</h5>
-              <Button className=" btn-primary btn-sm">Chat Customer</Button>
+              <Link to="/messege" className="btn btn-primary btn-sm">
+                Chat Customer
+              </Link>
             </div>
             <div className="d-flex flex-row">
               <Form.Group className="d-flex flex-column">
@@ -104,41 +106,44 @@ function OrderRow({ el, i, refetch }) {
               <Form.Group className="d-flex flex-column">
                 <small className="fw-bold">Order Date</small>
                 <small className="fw-bold">Reservation Date</small>
-                <small className="fw-bold">Reschedule Date</small>
-                <small className="fw-bold">Reschedule Status</small>
                 <small className="fw-bold">Payment Status</small>
                 <small className="fw-bold">Order Quantity</small>
                 <small className="fw-bold">Total Payment</small>
                 <small className="fw-bold">Down Payment</small>
                 <small className="fw-bold">Remaining Payment</small>
                 <small className="fw-bold">Remaining Payment Due</small>
+                {el.rescheduleStatus !== "requesting" && (<small className="fw-bold">Reschedule Date</small>)}
+                {el.rescheduleStatus !== "requesting" && (<small className="fw-bold">Reschedule Status</small>)}
               </Form.Group>
               <Form.Group className="d-flex flex-column ms-2">
                 <small className="">: {el.createdAt.toLocaleString()}</small>
                 <small className="">: {el.reservationDate.toLocaleString().slice(0, 10)}</small>
-                <small className="">: {el.rescheduleDate?.toLocaleString().slice(0, 10)}</small>
-                <small className="">
-                  : {el.rescheduleStatus}
-                  {el.rescheduleStatus === "requesting" && (
-                    <Button className="btn-success btn-sm ms-3" onClick={() => handleClickApproval("approved", el.id)}>
-                      Approved
-                    </Button>
-                  )}
-                  {el.rescheduleStatus === "requesting" && (
-                    <Button className="btn-danger btn-sm ms-3" onClick={() => handleClickApproval("unapproved", el.id)}>
-                      Unapproved
-                    </Button>
-                  )}
-                </small>
                 <small className="">: {el.paymentStatus}</small>
                 <small className="">: {el.quantity}</small>
                 <small className="">: {el.fullPayment.toLocaleString()}</small>
                 <small className="">: {el.downPayment.toLocaleString()}</small>
                 <small className="">: {(el.fullPayment - el.downPayment).toLocaleString()}</small>
                 <small className="">: pending</small>
+                {el.rescheduleStatus !== "requesting" && (<small className="">: {el.rescheduleDate?.toLocaleString().slice(0, 10)}</small>)}
+                {el.rescheduleStatus !== "requesting" && (<small className="">: {el.rescheduleStatus}</small>)}
               </Form.Group>
             </div>
           </Modal.Body>
+                {el.rescheduleStatus === "requesting" && (
+                  <small className="mb-2 d-flex justify-content-center">Your customer requesting for rescheduleing date to<span>&nbsp;</span><span className="fw-bold">{el.rescheduleDate?.toLocaleString().slice(0, 10)}</span>, will you approve it?</small>
+                )}
+              <div className="d-flex justify-content-center mb-3">
+                {el.rescheduleStatus === "requesting" && (
+                  <Button className="btn-success btn-sm ms-3" onClick={() => handleClickApproval("approved", el.id)}>
+                    Approved
+                  </Button>
+                )}
+                {el.rescheduleStatus === "requesting" && (
+                  <Button className="btn-danger btn-sm ms-3" onClick={() => handleClickApproval("not approved", el.id)}>
+                    Not approved
+                  </Button>
+                )}
+              </div>
         </Modal>
       </>
     </tr>
