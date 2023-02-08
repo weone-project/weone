@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import React, { useRef } from "react";
 import Rating from '@mui/material/Rating';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import loadingin from "../assets/53735-cart-icon-loader.gif";
@@ -279,6 +279,7 @@ const OrderHistory = () => {
                     }}>Success</button>
                 </div>
                 {newData?.map((item, index) => {
+                    console.log(item.Product?.CategoryId)
                     console.log(item);
                                         
                     return (
@@ -417,7 +418,7 @@ const OrderHistory = () => {
                                 </div> : 
                                 ''
                                 }
-                                {item.paymentStatus === 'DONE' ? 
+                                {item.paymentStatus === 'DONE'   && item.Product?.CategoryId !== 7? 
                                 <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
                                     <button onClick={() => {
                                         console.log(item.id, '>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -428,6 +429,14 @@ const OrderHistory = () => {
                                 { item.paymentStatus == 'DONEREVIEW' ? 
                                 <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
                                     <p>Transaction Completed</p>
+                                </div> : ''}
+                                {item.paymentStatus === 'DONE' && item.Product?.CategoryId === 7 ? 
+                                <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
+                                    <Link to={`/inv/${item.id}`}>
+                                    <button  className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Create Invitation
+                                    </button>
+                                    </Link>
+                                    
                                 </div> : ''}
                             </div>
                             <div className="flex items-center w-full mt-2 justify-end">

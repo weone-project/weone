@@ -2,7 +2,7 @@ import mapboxgl from "mapbox-gl";
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import React, { useRef, useEffect, useState } from 'react';
 import '../index.css';
-import { Link } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { useMutation } from "@apollo/client";
@@ -12,10 +12,8 @@ import logo from '../assets/logo/Logo-l.png'
 
 function Dashboard() {
 
-
-
-
-
+const { id } = useParams()
+const navigate = useNavigate()
 
   const [dataInvitation, setDataInvitation] = useState({
     quote: '',
@@ -46,7 +44,7 @@ function Dashboard() {
     wallet_no: '',
     wallet_owner: '',
     MusicId: 1,
-    OrderId: 1,
+    OrderId: '',
   });
 
   mapboxgl.accessToken = 'pk.eyJ1Ijoic2VydmVyMSIsImEiOiJjbGNzd3hwancwdTdxM3htc2duc240OXI2In0.Qy4ETg_Tjo9lCXDg52lXIQ';
@@ -93,10 +91,16 @@ function Dashboard() {
         map_location: e.lngLat.lat + "," + e.lngLat.lng
       })
 
+      
+
+  setDataInvitation({
+    ...dataInvitation,
+    OrderId: +id
+  })
+
       document.getElementById("koordinat").value = e.lngLat.lat + "," + e.lngLat.lng;
     });
   });
-
 
   const [FormInvitation, { data: dataInvitationNew, error: errorLoginUser }] = useMutation(POST_INVITATION, {
     variables: {
@@ -119,12 +123,14 @@ function Dashboard() {
 
   useEffect(() => {
     if (dataInvitationNew) {
-      console.log('Berhasil Buat Undangan')
 
       MySwal.fire({
         html: <i>Undangan Berhasil dibuat</i>,
         icon: 'success'
       })
+
+      navigate('/dash')
+
     }
   }, [dataInvitationNew])
 
@@ -258,7 +264,7 @@ function Dashboard() {
           <div className="h-10 flex h-full">
             <div className="flex mx-8 font-light h-full ">
               <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Products</button>
-              <Link to={'/invitations'}>
+              <Link to={'/theme'}>
                 <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Invitations</button>
               </Link>
               <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Favorite</button>
