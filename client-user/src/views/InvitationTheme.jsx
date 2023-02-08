@@ -19,7 +19,6 @@ const IntitatioinTheme = () => {
     const closeCategory = () => {
         setShow(false);
     }
-    console.log(data, loading, error);
     return (
         <section className="min-h-[100vh] bg-gray-50 flex flex-col items-center">
 

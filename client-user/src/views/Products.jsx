@@ -1,7 +1,4 @@
-import { HiSquares2X2, HiChevronDown, HiChevronRight } from "react-icons/hi2";
 import { useEffect, useState } from "react";
-import { RiRestaurantLine, RiBuildingLine, RiUserHeartLine, RiCamera3Line, RiTeamLine, RiVidiconLine, RiMapPin2Line } from "react-icons/ri";
-import Rating from '@mui/material/Rating';
 import { useQuery } from "@apollo/client";
 import { GET_PRODUCT_ACTIVE } from "../queries/product";
 import CardProducts from "../components/CardProducts";
