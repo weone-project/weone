@@ -2,7 +2,24 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+
+const registerVendor = gql `
+mutation CreateVendor($form: VendorForm) {
+  createVendor(form: $form) {
+    name
+    email
+    password
+    phoneNumber
+    city
+    province
+    address
+    vendorImgUrl
+    id
+  }
+}
+`
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -27,15 +44,22 @@ function RegisterForm() {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const [registerFormVendor, {data : dataRegisterVendor}] = useMutation(registerVendor)
+  
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      // masukan post di sini
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    }
+    registerFormVendor({
+      variables: {
+        form: values
+      }
+    })
   };
+  
+  useEffect(() => {
+    if(dataRegisterVendor){
+      navigate('/')
+    }
+}, [dataRegisterVendor])
 
   return (
     <div className="containerForm d-flex justify-content-center">
