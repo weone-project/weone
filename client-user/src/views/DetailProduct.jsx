@@ -192,7 +192,6 @@ const DetailProduct = () => {
       </div>
     );
   }
-  console.log(loading, loadingMidtrans, loadingTestimoni);
 
   const toLogin = () => {
     toast.warn("You Must Login First", {
@@ -309,11 +308,24 @@ const DetailProduct = () => {
               modules={[Pagination, Navigation]}
               className="mySwiper"
             >
+              {data?.getProductById?.imgUrl.map((img, index) => {
+                return (
               <SwiperSlide>
+                <div className="rounded-lg max-h-[240px] min-h-[240px]">
+                  <img
+                    src={img}
+                    className="rounded-lg object-cover h-full min-h-[240px] max-h-[240px]"
+                    alt=""
+                  />
+                </div>
+              </SwiperSlide>
+                )
+              })}
+              {/* <SwiperSlide>
                 <div className="rounded-lg">
                   <img
                     src="https://alexandra.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_60,c_fill,g_faces,w_560,h_280/assets/upload-I7DqjpDJE.webp"
-                    className="rounded-lg object-cover h-full"
+                    className="rounded-lg"
                     alt=""
                   />
                 </div>
@@ -326,16 +338,7 @@ const DetailProduct = () => {
                     alt=""
                   />
                 </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="rounded-lg">
-                  <img
-                    src="https://alexandra.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_60,c_fill,g_faces,w_560,h_280/assets/upload-I7DqjpDJE.webp"
-                    className="rounded-lg"
-                    alt=""
-                  />
-                </div>
-              </SwiperSlide>
+              </SwiperSlide> */}
             </Swiper>
           </div>
           <div className="h-[5em] w-full flex items-center border-b-2 pb-4 text-[#00425A]">
