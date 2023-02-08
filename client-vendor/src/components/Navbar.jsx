@@ -13,13 +13,13 @@ function MyNavbar() {
   return (
     <Navbar bg="white" className="Nav">
       <Container>
-        <Navbar.Brand>
+        <Navbar.Brand className="">
           <img className="logo" src="https://res.cloudinary.com/dnh89xvo5/image/upload/v1675526895/Final%20Project/Logo-l_l71oxb.png" alt="" />
         </Navbar.Brand>
             {localStorage.getItem("access_token") && (
-              <Link to={"/profile"} className="nav-link fw-bold">
-                Hi, Vendor Name
-              </Link>
+              <a className="nav-link fw-bold">
+              Hi, {localStorage.getItem('name')}
+              </a>
             )}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

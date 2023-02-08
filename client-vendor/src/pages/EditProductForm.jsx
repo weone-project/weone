@@ -2,7 +2,32 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gql, useMutation, useQuery } from "@apollo/client";
+
+const getAllCategories = gql`
+  query GetCategories {
+    getCategories {
+      id
+      name
+    }
+  }
+`;
+
+// const getProduct = gql `
+
+// `
+
+// const createProduct = gql`
+//   mutation CreateProduct($accessToken: String, $form: ProductForm) {
+//     createProduct(access_token: $accessToken, form: $form) {
+//       message
+//     }
+//   }
+// `;
+
+// const updateProduct = gql `
+// `
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -16,6 +41,7 @@ function RegisterForm() {
     price: 0,
     dpPrice: 0,
     estimatedDay: 0,
+    CategoryId: 0,
   };
 
   const [values, setValues] = useState(input);
@@ -26,29 +52,49 @@ function RegisterForm() {
       ...values,
       [name]: value,
     });
-    // console.log(name, value);
+    console.log(name, value);
+  };
+  const imgUrl = [];
+  if (values.mainImg) {
+    imgUrl.push(values.mainImg);
+  }
+  if (values.detailImg1) {
+    imgUrl.push(values.detailImg1);
+  }
+  if (values.detailImg2) {
+    imgUrl.push(values.detailImg2);
+  }
+  if (values.detailImg3) {
+    imgUrl.push(values.detailImg3);
+  }
+  const data = {
+    name: values.name,
+    description: values.description,
+    imgUrl,
+    price: +values.price,
+    dpPrice: +values.dpPrice,
+    estimatedDay: +values.estimatedDay,
+    CategoryId: +values.CategoryId,
+  };
+  const { data: allCategories, loading } = useQuery(getAllCategories);
+
+  // const [addProductFormVendor, { data: dataAddProductVendor }] = useMutation(createProduct);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // addProductFormVendor({
+    //   variables: {
+    //     accessToken: localStorage.getItem("access_token"),
+    //     form: data,
+    //   },
+    // });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      // masukan post di sini
-      const imgUrl = [];
-      imgUrl.push(values.mainImg, values.detailImg1, values.detailImg2, values.detailImg3);
-      const data = {
-        name: values.name,
-        description: values.description,
-        imgUrl,
-        price: values.price,
-        dpPrice: values.dpPrice,
-        estimatedDay: values.estimatedDay,
-      };
-      console.log(data);
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // useEffect(() => {
+  //   if (dataAddProductVendor) {
+  //     navigate("/products");
+  //   }
+  // }, [dataAddProductVendor]);
 
   return (
     <div className="containerForm d-flex justify-content-center">
@@ -63,6 +109,7 @@ function RegisterForm() {
             <div className="d-flex flex-row cardForm mb-2">
               <Form.Group className="mb-3 d-flex flex-column gap-2">
                 <Form.Label className="fw-bold">Name</Form.Label>
+                <Form.Label className="fw-bold">Category</Form.Label>
                 <Form.Label className="fw-bold">Price</Form.Label>
                 {values.price > 10000000 && <Form.Label className="fw-bold">Down Payment</Form.Label>}
                 <Form.Label className="fw-bold">Estimated Down Payment Due</Form.Label>
@@ -74,6 +121,7 @@ function RegisterForm() {
                 <Form.Label className="fw-bold">:</Form.Label>
                 <Form.Label className="fw-bold">:</Form.Label>
                 <Form.Label className="fw-bold">:</Form.Label>
+                <Form.Label className="fw-bold">:</Form.Label>
                 {values.price > 10000000 && <Form.Label className="fw-bold">:</Form.Label>}
                 <Form.Label className="fw-bold mt-4">:</Form.Label>
                 <Form.Label className="fw-bold mb-5">:</Form.Label>
@@ -82,6 +130,15 @@ function RegisterForm() {
 
               <Form.Group className="mb-1 col-9 ms-auto d-flex flex-column gap-2">
                 <Form.Control className="form-control-sm" type="text" placeholder="Enter Name" name="name" onChange={handleInputChange} value={values.name} />
+                <select name="CategoryId" className="form-control form-control-sm mb-1" onChange={handleInputChange} defaultValue={values.CategoryId}>
+                    {allCategories.getCategories.map((el) => {
+                      return (
+                        <option key={el.id} value={el.id}>
+                          {el.name}
+                        </option>
+                      );
+                    })}
+                  </select>
                 <Form.Control className="form-control-sm w-25" type="number" min={100000} name="price" onChange={handleInputChange} value={values.price} />
                 {values.price > 10000000 && <Form.Control className="form-control-sm w-25" max={values.price * 0.5} min={3000000} type="number" name="dpPrice" onChange={handleInputChange} value={values.dpPrice} />}
                 <Form.Control className="form-control-sm w-25 mb-4" min={1} type="number" name="estimatedDay" onChange={handleInputChange} value={values.estimatedDay} />

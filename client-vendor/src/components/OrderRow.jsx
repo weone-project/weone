@@ -1,25 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
-// import { Link } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 
-function OrderRow() {
+const updateReschedule = gql`
+  mutation Mutation($accessToken: String, $form: reschedule, $orderId: ID) {
+    updateReschedule(access_token: $accessToken, form: $form, orderId: $orderId) {
+      message
+    }
+  }
+`;
+
+function OrderRow({ el, i, refetch }) {
+  
+  const navigate = useNavigate()
   const [modalShow, setModalShow] = useState(false);
+  const [updateRescheduleStatus, { data: dataRescheduleStatus }] = useMutation(updateReschedule);
+
+  const handleClickApproval = (status, id) => {
+    updateRescheduleStatus({
+      variables: {
+        accessToken: localStorage.getItem("access_token"),
+        form: {
+          rescheduleStatus: status,
+        },
+        orderId: id,
+      },
+    });
+  };
+
+  useEffect (() => {
+    if (dataRescheduleStatus) {
+      refetch()
+    }
+  }, [dataRescheduleStatus])
 
   return (
     <tr>
-      <td className="pt-3">1</td>
-      <td className="pt-3">1000</td>
-      <td className="pt-3">Ibnu</td>
-      <td className="pt-3">Simple Venue</td>
-      <td className="pt-3">1 hour</td>
-      <td className="pt-3">24-02-2023</td>
-      <td className="pt-3"></td>
-      <td className="pt-3"></td>
-      <td className="pt-3">Booked</td>
-      <td className="pt-3">20.000.000</td>
-      <td className="pt-3">7.000.000</td>
-      <td className="pt-3">10-02-2023</td>
-      <td className="pt-3">none</td>
+      <td className="pt-3">{i + 1}</td>
+      <td className="pt-3">{el.id}</td>
+      <td className="pt-3">{el.User.name}</td>
+      <td className="pt-3">{el.Product.name}</td>
+      <td className="pt-3">{el.quantity}</td>
+      <td className="pt-3">{el.reservationDate.toLocaleString().slice(0, 10)}</td>
+      <td className="pt-3">{el.rescheduleDate?.toLocaleString().slice(0, 10)}</td>
+      <td className="pt-3">{el.rescheduleStatus}</td>
+      <td className="pt-3">{el.paymentStatus}</td>
+      <td className="pt-3">{el.fullPayment.toLocaleString()}</td>
+      <td className="pt-3">{el.downPayment.toLocaleString()}</td>
+      <td className="pt-3"> pending</td>
+      {el.notes ? <td className="pt-3">yes</td> : <td className="pt-3">no</td>}
       <td>
         <Button className="btn-dark btn-sm" onClick={() => setModalShow(true)}>
           Show
@@ -37,16 +67,16 @@ function OrderRow() {
             </div>
             <div className="d-flex flex-row">
               <Form.Group className="d-flex flex-column">
-                <text className="fw-bold">Name</text>
-                <text className="fw-bold">Phone Number</text>
-                <text className="fw-bold">Address</text>
-                <text className="fw-bold">Notes</text>
+                <small className="fw-bold">Name</small>
+                <small className="fw-bold">Phone Number</small>
+                <small className="fw-bold">Address</small>
+                <small className="fw-bold">Notes</small>
               </Form.Group>
               <Form.Group className="d-flex flex-column ms-2">
-                <text className="">: Ibnu</text>
-                <text className="">: 9176237123</text>
-                <text className="">: Bekasi</text>
-                <text className="">: </text>
+                <small className="">: {el.User.name}</small>
+                <small className="">: {el.User.phoneNumber}</small>
+                <small className="">: {el.User.address}</small>
+                <small className="">: {el.notes}</small>
               </Form.Group>
             </div>
             <hr />
@@ -54,16 +84,16 @@ function OrderRow() {
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-row">
                 <Form.Group className="d-flex flex-column">
-                  <text className="fw-bold">Name</text>
-                  <text className="fw-bold">Category</text>
-                  <text className="fw-bold">Price</text>
-                  <text className="fw-bold">Description</text>
+                  <small className="fw-bold">Name</small>
+                  <small className="fw-bold">Category</small>
+                  <small className="fw-bold">Price</small>
+                  <small className="fw-bold">Description</small>
                 </Form.Group>
                 <Form.Group className="d-flex flex-column ms-2">
-                  <text className="">: Simple Venue</text>
-                  <text className="">: Venue</text>
-                  <text className="">: 20000000</text>
-                  <text className="">: Sofa for groom and bride with spreaded petals</text>
+                  <small className="">: {el.Product.name}</small>
+                  <small className="">: {el.Product.Category.name}</small>
+                  <small className="">: {el.Product.price}</small>
+                  <small className="">: {el.Product.description}</small>
                 </Form.Group>
               </div>
               <div>
@@ -74,28 +104,40 @@ function OrderRow() {
             <h5 className="fw-bold">Order Information</h5>
             <div className="d-flex flex-row">
               <Form.Group className="d-flex flex-column">
-                <text className="fw-bold">Order Date</text>
-                <text className="fw-bold">Reservation Date</text>
-                <text className="fw-bold">Reschedule Date</text>
-                <text className="fw-bold">Reschedule Status</text>
-                <text className="fw-bold">Payment Status</text>
-                <text className="fw-bold">Order Quantity</text>
-                <text className="fw-bold">Total Payment</text>
-                <text className="fw-bold">Down Payment</text>
-                <text className="fw-bold">Remaining Payment</text>
-                <text className="fw-bold">Remaining Paiment Due</text>
+                <small className="fw-bold">Order Date</small>
+                <small className="fw-bold">Reservation Date</small>
+                <small className="fw-bold">Reschedule Date</small>
+                <small className="fw-bold">Reschedule Status</small>
+                <small className="fw-bold">Payment Status</small>
+                <small className="fw-bold">Order Quantity</small>
+                <small className="fw-bold">Total Payment</small>
+                <small className="fw-bold">Down Payment</small>
+                <small className="fw-bold">Remaining Payment</small>
+                <small className="fw-bold">Remaining Payment Due</small>
               </Form.Group>
               <Form.Group className="d-flex flex-column ms-2">
-                <text className="">: 7 February 2023</text>
-                <text className="">: 28 February 2023</text>
-                <text className="">: </text>
-                <text className="">: </text>
-                <text className="">: Booked</text>
-                <text className="">: 2</text>
-                <text className="">: 40000000</text>
-                <text className="">: 14000000</text>
-                <text className="">: 26000000</text>
-                <text className="">: 21 February 2023</text>
+                <small className="">: {el.createdAt.toLocaleString()}</small>
+                <small className="">: {el.reservationDate.toLocaleString().slice(0, 10)}</small>
+                <small className="">: {el.rescheduleDate?.toLocaleString().slice(0, 10)}</small>
+                <small className="">
+                  : {el.rescheduleStatus}
+                  {el.rescheduleStatus === "requesting" && (
+                    <Button className="btn-success btn-sm ms-3" onClick={() => handleClickApproval("approved", el.id)}>
+                      Approved
+                    </Button>
+                  )}
+                  {el.rescheduleStatus === "requesting" && (
+                    <Button className="btn-danger btn-sm ms-3" onClick={() => handleClickApproval("unapproved", el.id)}>
+                      Unapproved
+                    </Button>
+                  )}
+                </small>
+                <small className="">: {el.paymentStatus}</small>
+                <small className="">: {el.quantity}</small>
+                <small className="">: {el.fullPayment.toLocaleString()}</small>
+                <small className="">: {el.downPayment.toLocaleString()}</small>
+                <small className="">: {(el.fullPayment - el.downPayment).toLocaleString()}</small>
+                <small className="">: pending</small>
               </Form.Group>
             </div>
           </Modal.Body>

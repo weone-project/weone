@@ -1,16 +1,27 @@
 import { Button, Form, Card, Badge } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gql, useMutation } from "@apollo/client";
+
+const vendorLogin = gql `
+mutation LoginVendor($form: LoginVendorForm) {
+  loginVendor(form: $form) {
+    name
+    access_token
+  }
+}
+`
 
 function LoginForm() {
   const navigate = useNavigate();
+
   const input = {
     email: "",
     password: "",
   };
-
   const [values, setValues] = useState(input);
 
+  
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setValues({
@@ -19,15 +30,24 @@ function LoginForm() {
     });
   };
 
-  const handleSubmit = async (event) => {
+  const [loginFormVendor, {data : dataLoginVendor}] = useMutation(vendorLogin)
+  
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-        //masukan post di sini
-      navigate("/products");
-    } catch (error) {
-      console.log(error);
-    }
+    loginFormVendor({
+      variables: {
+        form: values
+      }
+    })
   };
+
+  useEffect(() => {
+    if(dataLoginVendor){
+      localStorage.setItem('access_token', dataLoginVendor.loginVendor.access_token)
+      localStorage.setItem('name', dataLoginVendor.loginVendor.name)
+      navigate('/products')
+    }
+}, [dataLoginVendor])
 
   return (
     <div className="containerLogin d-flex justify-content-center">
