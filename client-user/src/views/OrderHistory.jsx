@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import {HiOutlineShoppingBag } from 'react-icons/hi'
-import { GET_ORDERS, UPDATE_ORDER } from '../queries/order';
+import { GET_ORDERS, UPDATE_ORDER, UPDATE_ORDER_RESCHEDULE } from '../queries/order';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import React, { useRef } from "react";
 import Rating from '@mui/material/Rating';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import loadingin from "../assets/53735-cart-icon-loader.gif";
@@ -35,6 +35,7 @@ const OrderHistory = () => {
         },
         fetchPolicy: 'no-cache'
     })
+    console.log(data, '<<<<<<<<<<<<<<<<<<<<<<<<<');
     const [dataTestimonial, { loading: loadingTestimonial, error: errorTestimonial, data: dataTestimonialData }] = useMutation(CREATE_TESTIMONI, {
         refetchQueries: [{
             query: GET_ORDERS,
@@ -47,12 +48,55 @@ const OrderHistory = () => {
     const [review, setReview] = useState('')
     
     const [open2, setOpen2] = React.useState(false);
-    const handleOpen2 = () => setOpen2(true);
+    const handleOpen2 = (id, name, fullPayment, reservationDate, imgUrl) => {
+        setOpen2(true);
+        setDataModal2({
+            id: id,
+            name: name,
+            fullPayment: fullPayment,
+            reservationDate: reservationDate,
+            imgUrl: imgUrl,
+            } )
+    } 
+    
     const handleClose2 = () => setOpen2(false);
 
+    const [ dataModal , setDataModal ] = useState({
+        id: '',
+        name: '',
+        fullPayment: '',
+        imgUrl: '',
+    })
+    const [ dataModal2 , setDataModal2 ] = useState({
+        id: '',
+        name: '',
+        fullPayment: '',
+        reservationDate: '',
+        imgUrl: '',
+    })
+    const [dataReschecule, setdataReschedule] = useState('')
+
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (id, name, fullPayment, imgUrl) => {
+        console.log(id, name, fullPayment, imgUrl,'>>>>>>>>>>><<<<<<<<<<<<<<<<');
+        setOpen(true);
+        setDataModal({
+            id: id,
+            name: name,
+            fullPayment: fullPayment,
+            imgUrl: imgUrl,
+         } )
+    } 
     const handleClose = () => setOpen(false);
+    const [dataUpdate, { loading: loadingUpdate, error: errorUpdate, data: dataUpdateData }] = useMutation(UPDATE_ORDER, {
+        refetchQueries: [{
+            query: GET_ORDERS,
+            variables: {
+                accessToken: localStorage.getItem('token')
+            }
+        }],
+        awaitRefetchQueries: true,
+    })
     const submitTestimoni = (id) => {
         console.log(id, '<<<<<<<<<<<<<<<<<<<<<<');
         if ( rating === 0 || !review ) {
@@ -90,6 +134,7 @@ const OrderHistory = () => {
                 handleClose()
             }
         }
+        // console.log(dataUpdateData, '<<<<<<<<<<<<<<<<<<<<<<<<<');
 
     useEffect(() => {
         if (dataTestimonialData?.createTestimony) {
@@ -124,6 +169,37 @@ const OrderHistory = () => {
           }
         })
     }
+
+    const [dataUpdateResched, { loading: loadingReschecule, error: errorReschecule, data: dataRescheculeData }] = useMutation(UPDATE_ORDER_RESCHEDULE, {
+        refetchQueries: [{
+            query: GET_ORDERS,
+            variables: {
+                accessToken: localStorage.getItem('token')
+            }
+        }],
+        awaitRefetchQueries: true,
+    })
+    const rescheduleDate = (id) => {
+        dataUpdateResched({
+            variables: {
+                form: {
+                    rescheduleDate: dataReschecule,
+                    rescheduleStatus: 'requesting'
+                },
+                orderId: +id,
+                accessToken: localStorage.getItem('token')
+            }
+        })
+        refetch()
+        handleClose2()
+    }
+
+    useEffect(() => {
+        if (dataRescheculeData?.updateReschedule) {
+            refetch()
+        }
+    }, [dataRescheculeData])
+    // console.log(dataRescheculeData, '!!!!!!!!!!!!!!!!!!!<<<<<<<<<<<<<<<<<<<<<<<<<');
 
     useEffect(() => {
         if (dataMidtransData?.midtransToken.token) {
@@ -177,15 +253,7 @@ const OrderHistory = () => {
         return date.toLocaleDateString("id", {year: 'numeric', month: 'long', day: 'numeric'})
     }
 
-    const [dataUpdate, { loading: loadingUpdate, error: errorUpdate, data: dataUpdateData }] = useMutation(UPDATE_ORDER, {
-        refetchQueries: [{
-            query: GET_ORDERS,
-            variables: {
-                accessToken: localStorage.getItem('token')
-            }
-        }],
-        awaitRefetchQueries: true,
-    })
+    
 
     if ( loading || loadingTestimonial || loadingMidtrans || loadingUpdate) {
         return (
@@ -211,7 +279,9 @@ const OrderHistory = () => {
                     }}>Success</button>
                 </div>
                 {newData?.map((item, index) => {
+                    console.log(item.Product?.CategoryId)
                     console.log(item);
+                                        
                     return (
                         <>
                         <Modal
@@ -226,26 +296,30 @@ const OrderHistory = () => {
                                         <p className="text-2xl font-semibold">Reschedule Date</p>
                                     </div>
                                     <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
-                                        <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                                        <div className='w-[20%] h-full flex items-center'><img src={dataModal2.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
                                         </div>
                                         <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
-                                            <p className='font-semibold'>{item.Product.name}</p>
+                                            <p className='font-semibold'>{dataModal2.name}</p>
                                             <div className='flex'>
                                             </div>
-                                            <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
-                                            <p className='text-[11px]'>Reservation Date: {formatDate(item.reservationDate)}</p>
+                                            <p className='text-[11px]'>Total Transaction: {formatRupiah(dataModal2.fullPayment)}</p>
+                                            <p className='text-[11px]'>Reservation Date: {formatDate(dataModal2.reservationDate)}</p>
                                         </div>
                                     </div>
                                     <div className='w-full mt-4 flex flex-col items-center'>
                                         <p className='text-[20px] font-semibold'>Change Date</p>
-                                        <input type="date" />
+                                        <input type="date" onChange={(e) => {
+                                            setdataReschedule(e.target.value)
+                                        }}/>
                                     </div>
-                                    <button className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
+                                    <button onClick={() => {
+                                        rescheduleDate(dataModal2.id)
+                                    }} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
                                         <p>Submit</p>
                                     </button>
                                 </div>
                                 </Box>
-                            </Modal>
+                        </Modal>
 
                             {/* INI MODAL REVIEW */}
                         <Modal
@@ -253,6 +327,7 @@ const OrderHistory = () => {
                                 onClose={handleClose}
                                 aria-labelledby="modal-modal-title"
                                 aria-describedby="modal-modal-description"
+                                key={item.id}
                             >
                                 <Box sx={style} className="border-b-2 bg-white rounded-xl h-[30em] w-[30em] ">
                                 <div className="w-full flex flex-col items-center px-8 py-4">
@@ -260,13 +335,13 @@ const OrderHistory = () => {
                                         <p className="text-2xl font-semibold">Review</p>
                                     </div>
                                     <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
-                                        <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                                        <div className='w-[20%] h-full flex items-center'><img src={dataModal.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
                                         </div>
                                         <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
-                                            <p className='font-semibold'>{item.Product.name}</p>
+                                            <p className='font-semibold'>{dataModal.name}</p>
                                             <div className='flex'>
                                             </div>
-                                            <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                            <p className='text-[11px]'>Total Transaction: {formatRupiah(dataModal.fullPayment)}</p>
                                         </div>
                                     </div>
                                     <div className='w-full mt-4 flex flex-col items-center'>
@@ -295,16 +370,17 @@ const OrderHistory = () => {
                                         />
                                     </div>
                                     <button onClick={() => {
-                                        submitTestimoni(item.Product.id)
+                                        console.log(dataModal);
+                                        submitTestimoni(dataModal.id)
                                     }} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
                                         <p>Submit</p>
                                     </button>
                                 </div>
                                 </Box>
-                            </Modal>
+                        </Modal>
                         <div className="w-[60%] bg-white mt-2 rounded-lg shadow flex flex-col p-4">
                             <div className="flex items-center">
-                                <p className="flex items-center text-[12px] font-[400]"> <HiOutlineShoppingBag className='mr-2 text-[17px]'/> 27/11/2023</p>
+                                <p className="flex items-center text-[12px] font-[400]"> <HiOutlineShoppingBag className='mr-2 text-[17px]'/> {formatDate(item.createdAt)}</p>
                                 {item.paymentStatus === 'DP' ? 
                                 <p className='bg-gray-200 ml-4 px-2 rounded text-[12px] font-[300]'>down payment</p>
                                 :
@@ -318,7 +394,12 @@ const OrderHistory = () => {
                                     <p className='font-semibold'>{item.Product.name}</p>
                                     <div className='flex'>
                                     <p className='text-[11px]'>Reservation date:  {formatDate(item.reservationDate)}</p>
-                                    <button onClick={handleOpen2} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
+                                    {item.rescheduleStatus === 'requesting'? 
+                                    <p className='text-[11px] ml-2 font-semibold'>|| Request date:  {formatDate(item.rescheduleDate)}</p> : 
+                                    <button onClick={() => {
+                                        handleOpen2(item.id, item.Product.name, item.fullPayment, item.reservationDate,  item.Product.imgUrl)
+                                    }} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
+                                }
                                     </div>
                                     <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
                                 </div>
@@ -337,14 +418,25 @@ const OrderHistory = () => {
                                 </div> : 
                                 ''
                                 }
-                                {item.paymentStatus === 'DONE' ? 
+                                {item.paymentStatus === 'DONE'   && item.Product?.CategoryId !== 7? 
                                 <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
-                                    <button onClick={handleOpen} className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
+                                    <button onClick={() => {
+                                        console.log(item.id, '>>>>>>>>>>>>>>>>>>>>>>>>');
+                                        handleOpen(item.id, item.Product.name, item.fullPayment, item.Product.imgUrl)
+                                    }} className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
                                     </button>
                                 </div> : ''}
-                                { item.paymentStatus === 'DONEREVIEW' ? 
+                                { item.paymentStatus == 'DONEREVIEW' ? 
                                 <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
                                     <p>Transaction Completed</p>
+                                </div> : ''}
+                                {item.paymentStatus === 'DONE' && item.Product?.CategoryId === 7 ? 
+                                <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
+                                    <Link to={`/inv/${item.id}`}>
+                                    <button  className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Create Invitation
+                                    </button>
+                                    </Link>
+                                    
                                 </div> : ''}
                             </div>
                             <div className="flex items-center w-full mt-2 justify-end">

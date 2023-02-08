@@ -13,13 +13,12 @@ import CardProducts from '../components/CardProducts';
 const Home = () => {
   const {data, loading, error} = useQuery(GET_PRODUCT_ACTIVE);
   const [newData, setNewData] = useState([]);
-console.log(data);
   useEffect(() => {
     if(data){
       const temp = data.getProductActive.filter((item) => item.rating >= 4)
       setNewData(temp)
     }
-  }, [])
+  }, [data])
   return (
     <>
       {/* carousell */}

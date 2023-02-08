@@ -46,6 +46,8 @@ query Query($accessToken: String) {
       userImgUrl
       password
     }
+    createdAt
+    updatedAt
   }
 }
 `
@@ -53,6 +55,14 @@ query Query($accessToken: String) {
 export const UPDATE_ORDER = gql`
 mutation Mutation($orderId: ID, $form: editOrder, $accessToken: String) {
   updateOrderUser(orderId: $orderId, form: $form, access_token: $accessToken) {
+    message
+  }
+}
+`
+
+export const UPDATE_ORDER_RESCHEDULE = gql`
+mutation Mutation($orderId: ID, $accessToken: String, $form: reschedule) {
+  updateReschedule(orderId: $orderId, access_token: $accessToken, form: $form) {
     message
   }
 }

@@ -1,19 +1,115 @@
 import { GET_INV_BY_ID } from '../../queries/invitation';
-import { useQuery } from '@apollo/client';
-import { useParams } from "react-router-dom";
-import { React } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { useNavigate, useParams } from "react-router-dom";
+import { React, useEffect } from 'react';
 import { useState } from "react";
 import { Link } from "react-router-dom"
-import logo from '../../assets/logo/Logo-l.png'
+import { ToastContainer, toast } from "react-toastify";
+import loadingin from "../../assets/53735-cart-icon-loader.gif";
+
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import { GET_MIDTRANS } from '../../queries/midtrans';
+import { GET_PRODUCT_BY_ID } from '../../queries/product';
+
 
 
 function TemaPrev() {
+    const {id} = useParams()
+    const dataProduct = useQuery(GET_PRODUCT_BY_ID, {
+        variables: {
+          getProductByIdId: id,
+        },
+      }).data?.getProductById;
 
+      console.log(dataProduct);
 
+const navigate = useNavigate()
+
+    const style = {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        boxShadow: 24,
+        p: 4,
+      };
     const [showModal, setShowModal] = useState(false);
+    const [formOrder, setFormOrder] = useState({
+        reservationDate: "",
+        notes: "",
+        quantity: 1,
+      });
+    const [open, setOpen] = useState(false);
 
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [
+        dataMidtrans,
+        { loading: loadingMidtrans, error: errorMidtrans, data: dataMidtransData },
+      ] = useMutation(GET_MIDTRANS);
+  const clickorderFull = () => {
+      dataMidtrans({
+        variables: {
+          form: {
+            quantity: 1,
+            reservationDate: new Date().toLocaleDateString('ca-CA'),
+            notes: "none",
+            paymentStatus: "DONE",
+            productId: +id,
+            downPayment: 0,
+            fullPayment: dataProduct.price,
+          },
+          status: "full",
+          accessToken: localStorage.getItem("token"),
+        },
+      });
+    // .then((res) => {
+    //   window.snap.pay(dataMidtransData.midtransToken.token, {
+    //     onSuccess: (result) => {
+    //       navigate('/histories')
+    //     }
+    //   }
+    // )
+
+    // })
+  };
+
+    const toLogin = () => {
+        toast.warn("You Must Login First", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    };
+
+
+    const formatRupiah = (money) => {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          minimumFractionDigits: 0,
+        }).format(money);
+      };
+
+      
+  useEffect(() => {
+    console.log('<<<<<<<<<<use effect midtrans');
+      if (dataMidtransData) {
+        window.snap.pay(dataMidtransData.midtransToken.token, {
+          onSuccess: (result) => {
+          navigate('/histories')
+        }
+      })
+    }
+  }, [dataMidtransData])
     function formatDate(date) {
-        return new Date(date).toLocaleDateString('id', 'ID')
+        return new Date(date).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     }
 
 
@@ -33,7 +129,6 @@ function TemaPrev() {
         return new Date(date).toLocaleDateString('id-ID', { day: 'numeric' })
     }
 
-    const { id } = useParams()
     const { data, loading, error } = useQuery(GET_INV_BY_ID, {
         variables: {
             getInvitationByIdId: 1
@@ -54,26 +149,77 @@ function TemaPrev() {
         new Audio(url).play();
     }
 
+    if (loading || loadingMidtrans ) {
+    
+        return (
+          <div className="min-h-[100vh] bg-white flex justify-center items-center pb-20">
+            <img src={loadingin} className="w-[200px]" alt="" />
+          </div>
+        );
+      }
+
+    // console.log(loading, loadingMidtrans, dataMidtrans);
+
 
     let search = window.location.search;
     let params = new URLSearchParams(search);
     let guest = params.get('to');
+    let back = "<"
     return (
         <>
+      <ToastContainer />
+
+<Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={style}
+            className="border-b-2 bg-white rounded-xl h-[35em] w-[30em] "
+          >
+            <div className="w-full flex flex-col items-center px-10 py-4">
+              <div className="w-full flex justify-center">
+                <p className="text-2xl font-semibold">Pesan Sekarang</p>
+              </div>
+              
+              <div className="w-full flex justify-center mt-6">
+                <img src={dataProduct?.imgUrl} />
+              </div>
+              <div className="mt-4  w-full rounded-lg">
+                
+              <button
+                onClick={clickorderFull}
+                className="mt-12 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2"
+              >
+                <p>Payment {formatRupiah(dataProduct?.price)}</p>
+              </button>
+              </div>
+            </div>
+          </Box>
+        </Modal>
 
             <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20 ">
                 <div className="flex w-full mx-[70px] justify-between items-center h-14">
-                <div>
-                        <Link to={'/invitations'}>
-                                <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300"> Blue Sky </button>
-                            </Link>
+                    <div>
+                        <Link to={'/theme'}>
+                            <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-fullduration-300 mr-4"> {back}  Back </button>
+                        </Link>
+                        <button className="mx-4  border-b-2 border-white font-[500]  h-full duration-300" disabled> Blue Sky </button>
                     </div>
 
                     {/* <div className="h-full flex items-center"><img src={logo} alt="" width={100} /></div> */}
                     <div className="h-10 flex h-full">
                         <div className="flex mx-8 font-light h-full ">
-                            
-                            <button className="mx-4 hover:bg-purple-800 text-white rounded-lg bg-[#645CBB] border-b-2 border-white font-[500] p-2 focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Buat Undangan Seperti ini</button>
+                            {localStorage.getItem("token") ? (
+
+                                <button onClick={handleOpen} className="mx-4 hover:bg-purple-800 text-white rounded-lg bg-[#645CBB] border-b-2 border-white font-[500] p-2 focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Buat Undangan Seperti ini</button>
+
+                            ) : (
+                                <button onClick={toLogin} className="mx-4 hover:bg-purple-800 text-white rounded-lg bg-[#645CBB] border-b-2 border-white font-[500] p-2 focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Buat Undangan Seperti ini</button>
+
+                            )}
                         </div>
                     </div>
                 </div>

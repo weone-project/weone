@@ -31,7 +31,7 @@ const Navbar = () => {
                     <Link to={'/products'}>
                     <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Products</button>
                     </Link>
-                    <Link to={'/invitations'}>
+                    <Link to={'/theme'}>
                     <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Invitations</button>
                     </Link>
                     <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Favorite</button>
@@ -57,7 +57,7 @@ const Navbar = () => {
                                     <p className="ml-4 font-[400]">Order</p>
                                 </div>
                             </Link>
-                            <Link to={'/histories'} className=" hover:bg-gray-200 items-center flex">
+                            <Link to={'/dash'} className=" hover:bg-gray-200 items-center flex">
                                 <div className=" flex items-center mt-2 duration-200">
                                     <HiSwatch className="text-[18px] font-bold ml-2"/>
                                     <p className="ml-4 font-[400]">Invitation</p>
