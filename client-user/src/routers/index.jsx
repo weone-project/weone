@@ -11,6 +11,7 @@ import Tema1 from '../views/theme/Tema1'
 import Dashboard from '../views/Dashboard'
 import InvitationTheme from '../views/InvitationTheme'
 import TemaPrev from '../views/theme/TemaPrev'
+import InvDashboard from '../views/InvDashboard'
 
 
 const router = createBrowserRouter([
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
                 }
             },
             {
-                path: '/invitations',
+                path: '/theme',
                 element: <InvitationTheme/>,
             }, 
         ]
@@ -76,7 +77,7 @@ const router = createBrowserRouter([
         // }
     },        
     {
-        path: '/inv',
+        path: '/inv/:id',
         element: <Dashboard/>
     },             
     {
@@ -84,8 +85,12 @@ const router = createBrowserRouter([
         element: <Tema1/>
     },            
     {
-        path: '/prev',
+        path: '/theme/:id',
         element: <TemaPrev/>
+    },  
+    {
+        path: '/dash',
+        element: <InvDashboard/>
     },  
 ])
 
