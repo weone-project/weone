@@ -74,7 +74,7 @@ function ProductsCard() {
               <BiSearchAlt />
             </button>
           </Form>
-          <Link to="/addProduct" className="btn btn-outline-dark fw-bold align-text-bottom shadow-lg">
+          <Link to="/addProduct" className="btn btn-outline-dark fw-bold shadow-lg">
             Add New Product
           </Link>
         </div>

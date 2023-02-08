@@ -50,15 +50,15 @@ const getProduct = gql`
 `;
 
 const editProduct = gql`
-  mutation UpdateProduct($form: ProductForm, $updateProductId: ID) {
-    updateProduct(form: $form, id: $updateProductId) {
-      message
-    }
+  mutation UpdateProduct($form: ProductForm, $updateProductId: ID, $accessToken: String) {
+  updateProduct(form: $form, id: $updateProductId, access_token: $accessToken) {
+    message
   }
+}
 `;
 
 function EditProductForm() {
-  const { id } = useParams();
+  const { productId } = useParams();
   const navigate = useNavigate();
   const input = {
     name: "",
@@ -111,27 +111,44 @@ function EditProductForm() {
     loading,
     loadingDataProduct,
   } = useQuery(getProduct, {
-    variables: { accessToken: localStorage.getItem("access_token"), getProductByIdId: id },
+    variables: { accessToken: localStorage.getItem("access_token"), getProductByIdId: productId },
   });
 
-  console.log(product,'<<<<<');
+  useEffect(() => {
+    if (product) {
+      setValues({
+        name: product.getProductById.name,
+        description: product.getProductById.description,
+        mainImg: product.getProductById.imgUrl[0],
+        detailImg1: product.getProductById.imgUrl[1],
+        detailImg2: product.getProductById.imgUrl[2],
+        detailImg3: product.getProductById.imgUrl[3],
+        price: product.getProductById.price,
+        dpPrice: product.getProductById.dpPrice,
+        estimatedDay: product.getProductById.estimatedDay,
+        CategoryId: product.getProductById.CategoryId,
+      });
+    }
+  }, [product]);
+
   const [editProductFormVendor, { data: dataEditProductVendor }] = useMutation(editProduct);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // editProductFormVendor({
-    //   variables: {
-    //     accessToken: localStorage.getItem("access_token"),
-    //     form: data,
-    //   },
-    // });
+    editProductFormVendor({
+      variables: {
+        form: data,
+        updateProductId: productId,
+        accessToken: localStorage.getItem("access_token"),
+      },
+    });
   };
 
-  // useEffect(() => {
-  //   if (dataEditProductVendor) {
-  //     navigate("/products");
-  //   }
-  // }, [dataEditProductVendor]);
+  useEffect(() => {
+    if (dataEditProductVendor) {
+      navigate("/products");
+    }
+  }, [dataEditProductVendor]);
 
   if (allCategories) {
     return (
