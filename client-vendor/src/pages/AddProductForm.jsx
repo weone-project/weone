@@ -1,9 +1,8 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
+import {Button, Form, Card, Badge} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { client } from "filestack-react";
 
 const getAllCategories = gql`
   query GetCategories {
@@ -23,6 +22,91 @@ const createProduct = gql`
 `;
 
 function AddProductForm() {
+  function uploadGalery() {
+    const options = {
+      accept: "image/*",
+      fromSources: ["local_file_system"],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file;
+        setValues({
+          ...values,
+          mainImg: url,
+        });
+        console.log(url);
+      },
+    };
+
+    const filestack_apikey = "AUBTskupZRaOEc2hj4Kqbz"; //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+    return picker.open();
+  }
+  function uploadGalery1() {
+    const options = {
+      accept: "image/*",
+      fromSources: ["local_file_system"],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file;
+        setValues({
+          ...values,
+          detailImg1: url,
+        });
+        console.log(url);
+      },
+    };
+
+    const filestack_apikey = "AUBTskupZRaOEc2hj4Kqbz"; //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+    return picker.open();
+  }
+  function uploadGalery2() {
+    const options = {
+      accept: "image/*",
+      fromSources: ["local_file_system"],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file;
+        setValues({
+          ...values,
+          detailImg2: url,
+        });
+        console.log(url);
+      },
+    };
+
+    const filestack_apikey = "AUBTskupZRaOEc2hj4Kqbz"; //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+    return picker.open();
+  }
+  function uploadGalery3() {
+    const options = {
+      accept: "image/*",
+      fromSources: ["local_file_system"],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file;
+        setValues({
+          ...values,
+          detailImg3: url,
+        });
+        console.log(url);
+      },
+    };
+
+    const filestack_apikey = "AUBTskupZRaOEc2hj4Kqbz"; //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+    return picker.open();
+  }
+
   const navigate = useNavigate();
   const input = {
     name: "",
@@ -109,7 +193,7 @@ function AddProductForm() {
                   <Form.Label className="fw-bold">Remaining Payment Due</Form.Label>
                   <Form.Label className="fw-bold">Product Image</Form.Label>
                   <Form.Label className="fw-bold mb-5">Detail Image</Form.Label>
-                  <Form.Label className="fw-bold mt-4 pt-2">Description</Form.Label>
+                  <Form.Label className="fw-bold mt-5 pt-3">Description</Form.Label>
                 </Form.Group>
                 <Form.Group className="mb-1 d-flex flex-column gap-2 ms-2 me-1">
                   <Form.Label className="fw-bold">:</Form.Label>
@@ -117,9 +201,9 @@ function AddProductForm() {
                   <Form.Label className="fw-bold">:</Form.Label>
                   <Form.Label className="fw-bold">:</Form.Label>
                   {values.price > 10000000 && <Form.Label className="fw-bold">:</Form.Label>}
-                  <Form.Label className="fw-bold mt-4">:</Form.Label>
-                  <Form.Label className="fw-bold mb-5">:</Form.Label>
-                  <Form.Label className="fw-bold mt-4 pt-2">:</Form.Label>
+                  <Form.Label className="fw-bold mt-2 pt-3">:</Form.Label>
+                  <Form.Label className="fw-bold mb-5 ">:</Form.Label>
+                  <Form.Label className="fw-bold mt-5 pt-3">:</Form.Label>
                 </Form.Group>
 
                 <Form.Group className="mb-1 col-9 ms-auto d-flex flex-column gap-2">
@@ -136,10 +220,10 @@ function AddProductForm() {
                       );
                     })}
                   </select>
-                  <Form.Control className="form-control-sm w-25" type="number" min={100000} name="price" onChange={handleInputChange} value={values.price} />
+                  <Form.Control className="form-control-sm w-25" type="number" name="price" onChange={handleInputChange} value={values.price} />
                   {values.price > 10000000 && <Form.Control className="form-control-sm w-25" max={values.price * 0.5} min={3000000} type="number" name="dpPrice" onChange={handleInputChange} value={values.dpPrice} />}
                   <select name="estimatedDay" className="form-control form-control-sm w-50 text-center" onChange={handleInputChange} defaultValue={values.estimatedDay}>
-                  <option selected disable>
+                    <option selected disable>
                       --- Select One ---
                     </option>
                     <option value="1">1 day before reservation date</option>
@@ -147,10 +231,30 @@ function AddProductForm() {
                     <option value="14">2 weeks before reservation date</option>
                     <option value="30">1 month before reservation date</option>
                   </select>
-                  <Form.Control className="form-control-sm" type="text" placeholder="Enter main image" name="mainImg" onChange={handleInputChange} value={values.mainImg} />
-                  <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 1" name="detailImg1" onChange={handleInputChange} value={values.detailImg1} />
-                  <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 2" name="detailImg2" onChange={handleInputChange} value={values.detailImg2} />
-                  <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 3" name="detailImg3" onChange={handleInputChange} value={values.detailImg3} />
+                  <div className="d-flex flex-row mt-4">
+                  <button onClick={uploadGalery} className="btn btn-primary btn-sm w-50 fw-bold">
+                    Upload Main Image
+                  </button>
+                  {values.mainImg?<h6 className="pt-2 ms-3"><Badge className="bg-success ">uploaded</Badge></h6>:<h6 className="pt-2 ms-3"><Badge className="bg-secondary">no uploaded file</Badge></h6>}
+                  </div>
+                  <div className="d-flex flex-row">
+                  <button onClick={uploadGalery1} className="btn btn-primary btn-sm w-50 fw-bold">
+                    Upload Detail Image 1
+                  </button>
+                  {values.detailImg1?<h6 className="pt-2 ms-3"><Badge className="bg-success ">uploaded</Badge></h6>:<h6 className="pt-2 ms-3"><Badge className="bg-secondary">no uploaded file</Badge></h6>}
+                  </div>
+                  <div className="d-flex flex-row">
+                  <button onClick={uploadGalery2} className="btn btn-primary btn-sm w-50 fw-bold">
+                    Upload Detail Image 2
+                  </button>
+                  {values.detailImg2?<h6 className="pt-2 ms-3"><Badge className="bg-success ">uploaded</Badge></h6>:<h6 className="pt-2 ms-3"><Badge className="bg-secondary">no uploaded file</Badge></h6>}
+                  </div>
+                  <div className="d-flex flex-row">
+                  <button onClick={uploadGalery3} className="btn btn-primary btn-sm w-50 fw-bold">
+                    Upload Detail Image 3
+                  </button>
+                  {values.detailImg3?<h6 className="pt-2 ms-3"><Badge className="bg-success ">uploaded</Badge></h6>:<h6 className="pt-2 ms-3"><Badge className="bg-secondary">no uploaded file</Badge></h6>}
+                  </div>
                   <Form.Control className="form-control-sm" as="textarea" placeholder="Enter product detail description" name="description" onChange={handleInputChange} value={values.description} />
                 </Form.Group>
               </div>

@@ -65,6 +65,7 @@ function ProductsTable() {
   const { data, loading, error, refetch } = useQuery(getVendorOrders, {
     variables: { accessToken: localStorage.getItem("access_token") },
   });
+
   if (data) {
     return (
       <div className="containerFetch d-flex justify-content-center">
