@@ -16,6 +16,7 @@ import loadingin from "../assets/53735-cart-icon-loader.gif";
 
 const Products = () => {
     const { data, loading, error } = useQuery(GET_PRODUCT_ACTIVE);
+    console.log(data);
     const { data: dataCategory, loading: loadingCategory, error: errorCategory } = useQuery(GET_CATEGORY);
     const [show, setShow] = useState(false);
     const [newData, setNewData] = useState([]);

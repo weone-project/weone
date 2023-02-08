@@ -14,9 +14,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GET_PRODUCT_BY_ID } from "../queries/product";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_MIDTRANS } from "../queries/midtrans";
-import { ToastContainer, toast } from 'react-toastify';
 import { GET_TESTIMONI } from "../queries/testimoni";
 import loadingin from "../assets/53735-cart-icon-loader.gif";
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const style = {
     position: 'absolute',
@@ -39,8 +41,8 @@ const DetailProduct = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [ totalPrice, setTotalPrice ] = useState(0) 
-    const [ totalDP, setTotalDP ] = useState(0)
+    const [ totalPrice, setTotalPrice ] = useState( data?.getProductById?.price * number ) 
+    const [ totalDP, setTotalDP ] = useState( data?.getProductById?.dpPrice * number )
     const [ formOrder, setFormOrder ] = useState({
       reservationDate: '',
       notes: '',
@@ -58,7 +60,11 @@ const DetailProduct = () => {
         setTotalDP(data?.getProductById?.dpPrice * (number - 1))
       }
     }
-    console.log(totalPrice,  totalDP);
+    useEffect(() => {
+      setTotalPrice(data?.getProductById?.price)
+      setTotalDP(data?.getProductById?.dpPrice)
+    }, [data])
+    
   const { data: dataTestimoni, loading: loadingTestimoni, error: errorTestimoni } = useQuery(GET_TESTIMONI, {
     variables: {
       productId: +id
@@ -73,77 +79,112 @@ const DetailProduct = () => {
       ).format(money);
   }
 
-
+  
+  
   const clickorderDP = () => {
+    if (formOrder.reservationDate === '' || formOrder.notes === '' || formOrder.quantity === '') {
+      toast.warn('Data is Required', {
+        position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  } else {
     dataMidtrans({
-          variables: {
-            form: {
-              quantity: +formOrder.quantity,
-              reservationDate: formOrder.reservationDate,
-              notes: formOrder.notes,
-              paymentStatus: 'DP',
-              productId: +id,
-              downPayment: totalDP,
-              fullPayment: totalPrice
-            },
-            status: 'dp',
-            accessToken: localStorage.getItem('token')
-          }
-        })
-}
-
-useEffect(() => {
-  if (dataMidtransData?.midtransToken.token) {
-    window.snap.pay(dataMidtransData.midtransToken.token, {
-      onSuccess: (result) => {
-        console.log(result, '<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-        navigate('/histories')
+      variables: {
+        form: {
+          quantity: +formOrder.quantity,
+          reservationDate: formOrder.reservationDate,
+          notes: formOrder.notes,
+          paymentStatus: 'DP',
+          productId: +id,
+          downPayment: totalDP,
+          fullPayment: totalPrice
+        },
+        status: 'dp',
+        accessToken: localStorage.getItem('token')
       }
-    }) 
+    })
   }
-}, [dataMidtransData])
+}
 
 const clickorderFull = () => {
-
-  dataMidtrans({
-    variables: {
-      form: {
-        quantity: +formOrder.quantity,
-        reservationDate: formOrder.reservationDate,
-        notes: formOrder.notes,
-        paymentStatus: 'DONE',
-        productId: +id,
-        downPayment: totalDP,
-        fullPayment: totalPrice
-      },
-      status: 'full',
-      accessToken: localStorage.getItem('token')
-    }
-  })
+  if ( formOrder.reservationDate === '' || formOrder.notes === '' || formOrder.quantity === '') {
+    toast.warn('Data is Required', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  } else {
+    dataMidtrans({
+      variables: {
+        form: {
+          quantity: +formOrder.quantity,
+          reservationDate: formOrder.reservationDate,
+          notes: formOrder.notes,
+          paymentStatus: 'DONE',
+          productId: +id,
+          downPayment: totalDP,
+          fullPayment: totalPrice
+        },
+        status: 'full',
+        accessToken: localStorage.getItem('token')
+      }
+    })
+  }
   // .then((res) => {
-  //   window.snap.pay(dataMidtransData.midtransToken.token, {
-  //     onSuccess: (result) => {
-  //       navigate('/histories')
-  //     }
-  //   }
-  // )
-
-// })
-}
-  // console.log();
-  if (loading || loadingTestimoni) {
-    return (
-      <div className="min-h-[100vh] bg-white flex justify-center items-center pb-20">
+    //   window.snap.pay(dataMidtransData.midtransToken.token, {
+      //     onSuccess: (result) => {
+        //       navigate('/histories')
+        //     }
+        //   }
+        // )
+        
+        // })
+      }
+    useEffect(() => {
+        if (dataMidtransData) {
+          window.snap.pay(dataMidtransData.midtransToken.token, {
+            onSuccess: (result) => {
+            navigate('/histories')
+          }
+        }) 
+      }
+    }, [dataMidtransData])
+      // console.log();
+      if (loading || loadingTestimoni || loadingMidtrans) {
+        return (
+          <div className="min-h-[100vh] bg-white flex justify-center items-center pb-20">
           <img src={loadingin} className="w-[200px]" alt="" />
       </div>
     )
   }
 
-
+  const toLogin = () => {
+    toast.warn('You Must Login First', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",})
+    }
+    navigate('/login')
 
   return (
     <>
-    <ToastContainer></ToastContainer>
+    <ToastContainer/>
     <div className="min-h-[100vh]  flex flex justify-center z-10">
       <Modal
         open={open}
@@ -287,7 +328,7 @@ const clickorderFull = () => {
             { dataTestimoni?.getTestimonies.map((item, index) => { 
               return (
                 <div key={item.id} className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
-                  <img src={item?.User?.userImgUrl} className="w-[50px] h-[50px] rounded-full" alt="" />
+                  <img src={item?.User?.userImgUrl} className="max-w-8 min-w-8 min-h-8 max-h-8 rounded-full" alt="" />
                   <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">{item?.User?.name}</p>
                   <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
                     <p className="text-[10px] font-light">{item?.testimony}</p>
@@ -296,14 +337,14 @@ const clickorderFull = () => {
                 </div>
               )
             })}
-            <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
+            {/* <div className="min-w-[300px] max-w-[300px] mx-2 rounded-lg border-[1px] h-[150px] flex flex-col p-2 h-full items-center">
               <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" className="w-[50px] h-[50px] rounded-full" alt="" />
               <p className="text-[12px] font w-full border-b-[1px] flex px-2 justify-center">chandra44</p>
               <div className="w-full h-full ml-4 flex-col flex justify-between items-center">
                 <p className="text-[10px] font-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
                 <Rating name="read-only size-small" size="small" value={4} precision={0.5} readOnly />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -337,9 +378,16 @@ const clickorderFull = () => {
               <button className="w-[50%] mx-2 bg-white text-[#00425A] border-[1px] border-[#BFACE2] hover:bg-[#A084DC] hover:text-white duration-200 h-[40px] rounded-lg flex items-center justify-center"> <HiChatBubbleBottomCenterText className="mx-2"/>
                 Chat
               </button>
-              <button onClick={handleOpen} className="w-[50%] mx-2 bg-[#BFACE2] hover:bg-[#645CBB] duration-200 text-white h-[40px] rounded-lg flex items-center justify-center">
+              {localStorage.getItem('token') ? 
+                <button onClick={handleOpen}  className="w-[50%] mx-2 bg-[#BFACE2] hover:bg-[#645CBB] duration-200 text-white h-[40px] rounded-lg flex items-center justify-center">
+                  Pesan Sekarang
+                </button>
+                : 
+                
+                <button onClick={toLogin} className="w-[50%] mx-2 bg-[#BFACE2] hover:bg-[#645CBB] duration-200 text-white h-[40px] rounded-lg flex items-center justify-center">
                 Pesan Sekarang
-              </button>
+                </button>
+              }
             </div>
             <div className="flex w-full justify-center mt-2"><p className="text-[13px] font-light">Chat untuk informasi lebi lanjut & kostumisasi produk</p></div>
           </div>

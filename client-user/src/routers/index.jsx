@@ -31,15 +31,27 @@ const router = createBrowserRouter([
             },
             {
                 path:'/histories',
-                element: <OrderHistory/>
+                element: <OrderHistory/>,
+                loader: () => {
+                    if (!localStorage.getItem('token')) {
+                        return redirect('/login')
+                    }
+                    return null
+                }
             },
             {
                 path: '/message',
-                element: <Message/>
+                element: <Message/>,
+                loader: () => {
+                    if (!localStorage.getItem('token')) {
+                        return redirect('/login')
+                    }
+                    return null
+                }
             },
             {
                 path: '/invitations',
-                element: <InvitationTheme/>
+                element: <InvitationTheme/>,
             }, 
         ]
     },
