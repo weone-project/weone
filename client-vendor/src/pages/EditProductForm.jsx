@@ -196,7 +196,15 @@ function EditProductForm() {
                   </select>
                   <Form.Control className="form-control-sm w-25" type="number" min={100000} name="price" onChange={handleInputChange} value={values.price} />
                   {values.price > 10000000 && <Form.Control className="form-control-sm w-25" max={values.price * 0.5} min={3000000} type="number" name="dpPrice" onChange={handleInputChange} value={values.dpPrice} />}
-                  <Form.Control className="form-control-sm w-25 mb-4" min={1} type="number" name="estimatedDay" onChange={handleInputChange} value={values.estimatedDay} />
+                  <select name="estimatedDay" className="form-control form-control-sm w-50 text-center" onChange={handleInputChange} defaultValue={values.estimatedDay}>
+                  <option selected disable>
+                      --- Select One ---
+                    </option>
+                    <option value="1">1 day before reservation date</option>
+                    <option value="7">1 week before reservation date</option>
+                    <option value="14">2 weeks before reservation date</option>
+                    <option value="30">1 month before reservation date</option>
+                  </select>
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter main image" name="mainImg" onChange={handleInputChange} value={values.mainImg} />
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 1" name="detailImg1" onChange={handleInputChange} value={values.detailImg1} />
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 2" name="detailImg2" onChange={handleInputChange} value={values.detailImg2} />
