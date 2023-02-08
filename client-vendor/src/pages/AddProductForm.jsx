@@ -124,8 +124,8 @@ function AddProductForm() {
 
                 <Form.Group className="mb-1 col-9 ms-auto d-flex flex-column gap-2">
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter Name" name="name" onChange={handleInputChange} value={values.name} />
-                  <select name="CategoryId" className="form-control form-control-sm w-50" onChange={handleInputChange} defaultValue={values.CategoryId}>
-                    <option selected disabled>
+                  <select name="CategoryId" className="form-control form-control-sm w-50 text-center" onChange={handleInputChange} defaultValue={values.CategoryId}>
+                    <option selected disable>
                       --- Select One ---
                     </option>
                     {allCategories.getCategories.map((el) => {
@@ -138,9 +138,8 @@ function AddProductForm() {
                   </select>
                   <Form.Control className="form-control-sm w-25" type="number" min={100000} name="price" onChange={handleInputChange} value={values.price} />
                   {values.price > 10000000 && <Form.Control className="form-control-sm w-25" max={values.price * 0.5} min={3000000} type="number" name="dpPrice" onChange={handleInputChange} value={values.dpPrice} />}
-                  {/* <Form.Control className="form-control-sm w-25 mb-4" min={1} type="number" name="estimatedDay" onChange={handleInputChange} value={values.estimatedDay} /> */}
                   <select name="estimatedDay" className="form-control form-control-sm w-50 text-center" onChange={handleInputChange} defaultValue={values.estimatedDay}>
-                  <option selected disabled>
+                  <option selected disable>
                       --- Select One ---
                     </option>
                     <option value="1">1 day before reservation date</option>
