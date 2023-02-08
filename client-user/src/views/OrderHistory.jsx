@@ -396,10 +396,13 @@ const OrderHistory = () => {
                                     <p className='text-[11px]'>Reservation date:  {formatDate(item.reservationDate)}</p>
                                     {item.rescheduleStatus === 'requesting'? 
                                     <p className='text-[11px] ml-2 font-semibold'>|| Request date:  {formatDate(item.rescheduleDate)}</p> : 
-                                    <button onClick={() => {
-                                        handleOpen2(item.id, item.Product.name, item.fullPayment, item.reservationDate,  item.Product.imgUrl)
-                                    }} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
+                                    ''
                                 }
+                                { item.rescheduleStatus === 'approved' ? <p className='text-[11px] ml-2 font-semibold'>|| Reschedule:  accepted</p> : ''}
+                                { item.rescheduleStatus === 'rejected' ? <p className='text-[11px] ml-2 font-semibold'>|| Reschedule:  rejected</p> : ''}
+                                {item.rescheduleStatus !== 'approved' && item.rescheduleStatus !== 'requesting' && item.rescheduleStatus !== 'rejected' ? <button onClick={() => {
+                                        handleOpen2(item.id, item.Product.name, item.fullPayment, item.reservationDate,  item.Product.imgUrl)
+                                    }} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>: ''}
                                     </div>
                                     <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
                                 </div>

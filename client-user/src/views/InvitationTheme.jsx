@@ -47,7 +47,7 @@ const IntitatioinTheme = () => {
             <div className="mt-10 flex justify-center w-full">
                 <div className=" w-[75%] grid grid-cols-3 gap-x-6 gap-y-6">
                     {data?.getProductActive?.map((item) => {
-                        if (item.Category.name === "invitation") {
+                        if (item.Category.name === "Invitation") {
                             return (
                                 <Link to={`/theme/${item.id}`}>
                                     <div className='max-w-full bg-white rounded-lg text-[#00425A] cursor-pointer border-b-2 pb-2 group'>
