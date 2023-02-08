@@ -229,9 +229,13 @@ const Products = () => {
             <div className="mt-10 flex justify-center w-full">
                 <div className=" w-[75%] grid grid-cols-4 gap-x-8 gap-y-6">
                     {newData?.map((product) => {
+                        console.log(product)
+                        if(product.CategoryId !== 7){
                         return (
                             <CardProducts key={product.id} product={product} />
                         )
+
+                        }
                     })}
                 </div>
             </div>
