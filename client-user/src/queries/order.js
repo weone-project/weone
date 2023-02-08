@@ -53,8 +53,8 @@ query Query($accessToken: String) {
 `
 
 export const UPDATE_ORDER = gql`
-mutation Mutation($orderId: ID, $form: editOrder, $accessToken: String) {
-  updateOrderUser(orderId: $orderId, form: $form, access_token: $accessToken) {
+mutation UpdateOrderUser($orderId: ID, $accessToken: String, $form: editOrderUser) {
+  updateOrderUser(orderId: $orderId, access_token: $accessToken, form: $form) {
     message
   }
 }
