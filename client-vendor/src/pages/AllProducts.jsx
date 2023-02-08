@@ -3,6 +3,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import ProductCards from "../components/ProductCard";
 import { gql, useQuery } from "@apollo/client";
+import { useEffect } from "react";
 
 const getVendorProducts = gql`
   query GetProducts($accessToken: String) {
@@ -55,6 +56,12 @@ function ProductsCard() {
   //   );
   // }
   
+  useEffect(() => {
+    if (data) {
+      refetch()
+    }
+  }, [data]);
+
   if (data) {
   return (
     <div className="containerFetch d-flex justify-content-around cardProduct">

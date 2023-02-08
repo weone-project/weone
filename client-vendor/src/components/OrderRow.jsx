@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { gql, useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
 
 const updateReschedule = gql`
   mutation Mutation($accessToken: String, $form: reschedule, $orderId: ID) {
@@ -13,7 +12,6 @@ const updateReschedule = gql`
 
 function OrderRow({ el, i, refetch }) {
   
-  const navigate = useNavigate()
   const [modalShow, setModalShow] = useState(false);
   const [updateRescheduleStatus, { data: dataRescheduleStatus }] = useMutation(updateReschedule);
 

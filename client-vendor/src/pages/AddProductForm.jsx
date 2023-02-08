@@ -106,7 +106,7 @@ function RegisterForm() {
                   <Form.Label className="fw-bold">Category</Form.Label>
                   <Form.Label className="fw-bold">Price</Form.Label>
                   {values.price > 10000000 && <Form.Label className="fw-bold">Down Payment</Form.Label>}
-                  <Form.Label className="fw-bold">Estimated Down Payment Due</Form.Label>
+                  <Form.Label className="fw-bold">Remaining Payment Due</Form.Label>
                   <Form.Label className="fw-bold">Product Image</Form.Label>
                   <Form.Label className="fw-bold mb-5">Detail Image</Form.Label>
                   <Form.Label className="fw-bold mt-4 pt-2">Description</Form.Label>
@@ -124,7 +124,10 @@ function RegisterForm() {
 
                 <Form.Group className="mb-1 col-9 ms-auto d-flex flex-column gap-2">
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter Name" name="name" onChange={handleInputChange} value={values.name} />
-                  <select name="CategoryId" className="form-control form-control-sm mb-1" onChange={handleInputChange} defaultValue={values.CategoryId}>
+                  <select name="CategoryId" className="form-control form-control-sm w-50" onChange={handleInputChange} defaultValue={values.CategoryId}>
+                    <option selected disabled>
+                      --- Select One ---
+                    </option>
                     {allCategories.getCategories.map((el) => {
                       return (
                         <option key={el.id} value={el.id}>
@@ -135,7 +138,16 @@ function RegisterForm() {
                   </select>
                   <Form.Control className="form-control-sm w-25" type="number" min={100000} name="price" onChange={handleInputChange} value={values.price} />
                   {values.price > 10000000 && <Form.Control className="form-control-sm w-25" max={values.price * 0.5} min={3000000} type="number" name="dpPrice" onChange={handleInputChange} value={values.dpPrice} />}
-                  <Form.Control className="form-control-sm w-25 mb-4" min={1} type="number" name="estimatedDay" onChange={handleInputChange} value={values.estimatedDay} />
+                  {/* <Form.Control className="form-control-sm w-25 mb-4" min={1} type="number" name="estimatedDay" onChange={handleInputChange} value={values.estimatedDay} /> */}
+                  <select name="estimatedDay" className="form-control form-control-sm w-50 text-center" onChange={handleInputChange} defaultValue={values.estimatedDay}>
+                  <option selected disabled>
+                      --- Select One ---
+                    </option>
+                    <option value="1">1 day before reservation date</option>
+                    <option value="7">1 week before reservation date</option>
+                    <option value="14">2 weeks before reservation date</option>
+                    <option value="30">1 month before reservation date</option>
+                  </select>
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter main image" name="mainImg" onChange={handleInputChange} value={values.mainImg} />
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 1" name="detailImg1" onChange={handleInputChange} value={values.detailImg1} />
                   <Form.Control className="form-control-sm" type="text" placeholder="Enter detail image 2" name="detailImg2" onChange={handleInputChange} value={values.detailImg2} />
