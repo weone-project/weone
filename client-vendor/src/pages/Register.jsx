@@ -1,27 +1,49 @@
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
+import { Button, Form, Card, Badge } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
+import { client } from "filestack-react";
+import { ImCancelCircle } from "react-icons/im";
 
-const registerVendor = gql `
-mutation CreateVendor($form: VendorForm) {
-  createVendor(form: $form) {
-    name
-    email
-    password
-    phoneNumber
-    city
-    province
-    address
-    vendorImgUrl
-    id
+const registerVendor = gql`
+  mutation CreateVendor($form: VendorForm) {
+    createVendor(form: $form) {
+      name
+      email
+      password
+      phoneNumber
+      city
+      province
+      address
+      vendorImgUrl
+      id
+    }
   }
-}
-`
+`;
 
 function RegisterForm() {
+  function uploadGalery() {
+    const options = {
+      accept: "image/*",
+      fromSources: ["local_file_system"],
+      maxSize: 1024 * 1024,
+      maxFiles: 1,
+      onFileUploadFinished(file) {
+        let { url } = file;
+        setValues({
+          ...values,
+          vendorImgUrl: url,
+        });
+        console.log(url);
+      },
+    };
+
+    const filestack_apikey = "AUBTskupZRaOEc2hj4Kqbz"; //replace with your api key
+    const filestack = client.init(filestack_apikey, options);
+    const picker = filestack.picker(options);
+    return picker.open();
+  }
+
   const navigate = useNavigate();
   const input = {
     name: "",
@@ -44,22 +66,22 @@ function RegisterForm() {
     });
   };
 
-  const [registerFormVendor, {data : dataRegisterVendor}] = useMutation(registerVendor)
-  
+  const [registerFormVendor, { data: dataRegisterVendor }] = useMutation(registerVendor);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     registerFormVendor({
       variables: {
-        form: values
-      }
-    })
+        form: values,
+      },
+    });
   };
-  
+
   useEffect(() => {
-    if(dataRegisterVendor){
-      navigate('/')
+    if (dataRegisterVendor) {
+      navigate("/");
     }
-}, [dataRegisterVendor])
+  }, [dataRegisterVendor]);
 
   return (
     <div className="containerForm d-flex justify-content-center">
@@ -101,7 +123,20 @@ function RegisterForm() {
                 <Form.Control type="text" placeholder="Enter city name" name="city" onChange={handleInputChange} value={values.city} />
                 <Form.Control type="text" placeholder="Enter province name" name="province" onChange={handleInputChange} value={values.province} />
                 <Form.Control as="textarea" placeholder="Enter address" name="address" onChange={handleInputChange} value={values.address} />
-                <Form.Control type="text" placeholder="Enter image" name="vendorImgUrl" onChange={handleInputChange} value={values.vendorImgUrl} />
+                <div className="d-flex flex-row mt-1 mb-3">
+                  <button onClick={uploadGalery} className="btn btn-primary btn-sm w-50 fw-bold">
+                    Upload Photo
+                  </button>
+                  {values.vendorImgUrl ? (
+                    <h6 className="pt-2 ms-3">
+                      <Badge className="bg-success ">uploaded</Badge>
+                    </h6>
+                  ) : (
+                    <h6 className="pt-2 ms-3">
+                      <Badge className="bg-secondary">no uploaded file</Badge>
+                    </h6>
+                  )}
+                </div>
               </Form.Group>
             </div>
 
@@ -109,7 +144,7 @@ function RegisterForm() {
               Creat Account
             </Button>
             <Link to="/" className="ms-3 btn btn-secondary shadow-lg">
-            Cancel
+              Cancel
             </Link>
           </Form>
         </Card.Body>
