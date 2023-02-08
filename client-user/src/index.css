@@ -52,9 +52,9 @@ body {
   background:
   linear-gradient(to top,
    rgb(255, 255, 255), 
-   rgba(255, 255, 255, 0.788),  
-   rgba(255, 255, 255, 0.616),  
-   rgba(255, 255, 255, 0.401)),  
+   rgba(255, 255, 255, 0.536),  
+   rgba(255, 255, 255, 0.31),  
+   rgba(255, 255, 255, 0.177)),  
    url(./groom-black-tuxedo-hugs-tender-stunning-bride-while-they-stand.jpg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -81,7 +81,13 @@ body {
 }
 
 .sectionSpecial {
-  background: url('https://alexandra.bridestory.com/image/upload/assets/bg-desktop3x-rkstZgpiI.webp');
+  background:   linear-gradient(to bottom,
+  rgb(255, 255, 255), 
+  rgba(255, 255, 255, 0.684),  
+  rgba(255, 255, 255, 0.293),  
+  rgba(255, 255, 255, 0.401))
+  ,url('https://alexandra.bridestory.com/image/upload/assets/bg-desktop3x-rkstZgpiI.webp');
+  margin-top: 5em;
 }
 
 code {

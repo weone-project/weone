@@ -9,6 +9,9 @@ import { GET_USERS, LOGIN_USER } from "../queries/user";
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import '../index.css'
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const navigate = useNavigate()
@@ -21,21 +24,65 @@ const Login = () => {
   
   const loginForm = (e) => {
     e.preventDefault();
-    LoginFormUser({
-      variables: {
-        form: dataLogin
-      }});
+    if (!dataLogin.email) {
+      toast.warn('Email is Required', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    } else if (!dataLogin.password) {
+      toast.warn('Password is Required', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    } else {
+      LoginFormUser({
+        variables: {
+          form: dataLogin
+        }});
+      }
     };
     
     useEffect(() => {
       if(dataLoginUser){
+        console.log(dataLoginUser);
         localStorage.setItem('token', dataLoginUser.loginUser.access_token)
+        localStorage.setItem('name', dataLoginUser.loginUser.name)
+        localStorage.setItem('id', dataLoginUser.loginUser.id)
         navigate('/')
       }
   }, [dataLoginUser])
+
+  // useEffect(() => {
+  //   if(errorLoginUser){
+  //     console.log(errorLoginUser?.message);
+  //     toast('🦄 Wow so easy!', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //       });
+  //   }
+  // }, [errorLoginUser])
   // console.log(dataLoginUser, errorLoginUser?.graphQLErrors[0].message);
   return (
     <>
+    <ToastContainer/>
       <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
         <div className="flex w-full mx-[70px] justify-between items-center h-14">
           <div className="h-full flex items-center">
@@ -86,7 +133,7 @@ const Login = () => {
               <div className="w-full"></div>
               <form action="">
               <div className="w-full mt-4">
-                <Input label="Email" type="email" color="purple" required onChange={(e) => {
+                <Input label="Email" type="email" color="purple" onChange={(e) => {
                   setDataLogin({
                     ...dataLogin,
                     email: e.target.value
@@ -94,7 +141,7 @@ const Login = () => {
                 }}/>
               </div>
               <div className="w-full mt-4">
-                <Input label="Password" type="password" required color="purple" onChange={(e) => {
+                <Input label="Password" type="password" color="purple" onChange={(e) => {
                   setDataLogin({
                     ...dataLogin,
                     password: e.target.value

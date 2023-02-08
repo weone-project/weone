@@ -37,3 +37,16 @@ export const REGISTER_USER = gql`
   }
 }
 `
+
+export const GET_USER_BY_ID = gql`
+query Query($getUserByIdId: ID, $accessToken: String) {
+  getUserById(id: $getUserByIdId, access_token: $accessToken) {
+    id
+    name
+    email
+    phoneNumber
+    address
+    userImgUrl
+  }
+}
+`

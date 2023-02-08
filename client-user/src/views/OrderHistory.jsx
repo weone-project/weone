@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import loadingin from "../assets/53735-cart-icon-loader.gif";
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 import "../style.css";
 import { GET_MIDTRANS } from '../queries/midtrans';
@@ -51,29 +54,42 @@ const OrderHistory = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const submitTestimoni = (id) => {
-        dataTestimonial({
-            variables: {
-                form: {
-                    rating: +rating,
-                    testimony: review,
-                    productId: +id,
-                },
-                accessToken: localStorage.getItem('token')
+        console.log(id, '<<<<<<<<<<<<<<<<<<<<<<');
+        if ( rating === 0 || !review ) {
+            toast.warn('Data is Required', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+            } else {
+                dataTestimonial({
+                    variables: {
+                        form: {
+                            rating: +rating,
+                            testimony: review,
+                            productId: +id,
+                        },
+                        accessToken: localStorage.getItem('token')
+                    }
+                })
+                dataUpdate({
+                    variables: {
+                        form: {
+                            paymentStatus: 'DONEREVIEW'
+                        },
+                        orderId: +id,
+                        accessToken: localStorage.getItem('token')
+                    }
+                })
+                refetch()
+                handleClose()
             }
-        })
-        dataUpdate({
-            variables: {
-                form: {
-                    paymentStatus: 'DONEREVIEW'
-                },
-                orderId: +id,
-                accessToken: localStorage.getItem('token')
-            }
-        })
-        refetch()
-        handleClose()
-        // navigate('/histories')
-    }
+        }
 
     useEffect(() => {
         if (dataTestimonialData?.createTestimony) {
@@ -179,188 +195,191 @@ const OrderHistory = () => {
         )
     }
     return (
-        <div className="min-h-[100vh] bg-gray-50 flex flex-col items-center p-6">
+        <>
+        <ToastContainer/>
+            <div className="min-h-[100vh] bg-gray-50 flex flex-col items-center p-6">
 
-            <div className="w-[60%] bg-white rounded-lg mb-4 flex px-4 shadow">
-                <button className="px-4 py-2 border-b-2 border-white focus:border-[#00425A] duration-200 mx-2" onClick={() => {
-                    setFilterOrder('All')
-                }}>All</button>
-                <button className="px-4 py-2 border-b-2 border-white focus:border-[#00425A] duration-200 mx-2" onClick={() => {
-                    setFilterOrder('DP')
-                }}>Down Payment</button>
-                <button className="px-4 py-2 border-b-2 border-white focus:border-[#00425A] duration-200 mx-2" onClick={() => {
-                    setFilterOrder('DONE')
-                }}>Success</button>
-            </div>
-            {newData?.map((item, index) => {
-                console.log(item);
-                return (
-                    <>
-                    <Modal
-                            open={open2}
-                            onClose={handleClose2}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={style} className="border-b-2 bg-white rounded-xl h-[25em] w-[30em] ">
-                            <div className="w-full flex flex-col items-center px-8 py-4">
-                                <div className="w-full flex justify-center">
-                                    <p className="text-2xl font-semibold">Reschedule Date</p>
-                                </div>
-                                <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
-                                    <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                <div className="w-[60%] bg-white rounded-lg mb-4 flex px-4 shadow">
+                    <button className="px-4 py-2 border-b-2 border-white focus:border-[#00425A] duration-200 mx-2" onClick={() => {
+                        setFilterOrder('All')
+                    }}>All</button>
+                    <button className="px-4 py-2 border-b-2 border-white focus:border-[#00425A] duration-200 mx-2" onClick={() => {
+                        setFilterOrder('DP')
+                    }}>Down Payment</button>
+                    <button className="px-4 py-2 border-b-2 border-white focus:border-[#00425A] duration-200 mx-2" onClick={() => {
+                        setFilterOrder('DONE')
+                    }}>Success</button>
+                </div>
+                {newData?.map((item, index) => {
+                    console.log(item);
+                    return (
+                        <>
+                        <Modal
+                                open={open2}
+                                onClose={handleClose2}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={style} className="border-b-2 bg-white rounded-xl h-[25em] w-[30em] ">
+                                <div className="w-full flex flex-col items-center px-8 py-4">
+                                    <div className="w-full flex justify-center">
+                                        <p className="text-2xl font-semibold">Reschedule Date</p>
                                     </div>
-                                    <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
-                                        <p className='font-semibold'>{item.Product.name}</p>
-                                        <div className='flex'>
+                                    <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
+                                        <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
                                         </div>
-                                        <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
-                                        <p className='text-[11px]'>Reservation Date: {formatDate(item.reservationDate)}</p>
+                                        <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
+                                            <p className='font-semibold'>{item.Product.name}</p>
+                                            <div className='flex'>
+                                            </div>
+                                            <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                            <p className='text-[11px]'>Reservation Date: {formatDate(item.reservationDate)}</p>
+                                        </div>
                                     </div>
+                                    <div className='w-full mt-4 flex flex-col items-center'>
+                                        <p className='text-[20px] font-semibold'>Change Date</p>
+                                        <input type="date" />
+                                    </div>
+                                    <button className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
+                                        <p>Submit</p>
+                                    </button>
                                 </div>
-                                <div className='w-full mt-4 flex flex-col items-center'>
-                                    <p className='text-[20px] font-semibold'>Change Date</p>
-                                    <input type="date" />
-                                </div>
-                                <button className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
-                                    <p>Submit</p>
-                                </button>
-                            </div>
-                            </Box>
-                        </Modal>
+                                </Box>
+                            </Modal>
 
-                        {/* INI MODAL REVIEW */}
-                    <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={style} className="border-b-2 bg-white rounded-xl h-[30em] w-[30em] ">
-                            <div className="w-full flex flex-col items-center px-8 py-4">
-                                <div className="w-full flex justify-center">
-                                    <p className="text-2xl font-semibold">Review</p>
-                                </div>
-                                <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
-                                    <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                            {/* INI MODAL REVIEW */}
+                        <Modal
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={style} className="border-b-2 bg-white rounded-xl h-[30em] w-[30em] ">
+                                <div className="w-full flex flex-col items-center px-8 py-4">
+                                    <div className="w-full flex justify-center">
+                                        <p className="text-2xl font-semibold">Review</p>
                                     </div>
-                                    <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
-                                        <p className='font-semibold'>{item.Product.name}</p>
-                                        <div className='flex'>
+                                    <div className='w-full flex mt-6 border-[1px] p-2 rounded-lg'>
+                                        <div className='w-[20%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
                                         </div>
-                                        <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                        <div className='w-[80%] h-full flex justify-center flex-col ml-4'>
+                                            <p className='font-semibold'>{item.Product.name}</p>
+                                            <div className='flex'>
+                                            </div>
+                                            <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                        </div>
                                     </div>
+                                    <div className='w-full mt-4 flex flex-col items-center'>
+                                        <p className='text-[13px] mb-[2px]'>Rating Product</p>
+                                        <Rating
+                                            name="simple-controlled size-large"
+                                            size='large'
+                                            value={rating}
+                                            onChange={(event, newValue) => {
+                                                setRating(newValue);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className='w-full mt-4 flex flex-col items-center'>
+                                        {/* <p className='text-[13px] mb-[2px]'>Write your testimonial here</p> */}
+                                        <TextField
+                                            id="outlined-textarea"
+                                            label="Testimony"
+                                            placeholder="Write your testimonial here"
+                                            multiline
+                                            rows={3}
+                                            className='w-full max-h-[6em]'
+                                            onChange={(e) => {
+                                                setReview(e.target.value)
+                                            }}
+                                        />
+                                    </div>
+                                    <button onClick={() => {
+                                        submitTestimoni(item.Product.id)
+                                    }} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
+                                        <p>Submit</p>
+                                    </button>
                                 </div>
-                                <div className='w-full mt-4 flex flex-col items-center'>
-                                    <p className='text-[13px] mb-[2px]'>Rating Product</p>
-                                    <Rating
-                                        name="simple-controlled size-large"
-                                        size='large'
-                                        value={rating}
-                                        onChange={(event, newValue) => {
-                                            setRating(newValue);
-                                        }}
-                                    />
-                                </div>
-                                <div className='w-full mt-4 flex flex-col items-center'>
-                                    {/* <p className='text-[13px] mb-[2px]'>Write your testimonial here</p> */}
-                                    <TextField
-                                        id="outlined-textarea"
-                                        label="Testimony"
-                                        placeholder="Write your testimonial here"
-                                        multiline
-                                        rows={3}
-                                        className='w-full max-h-[6em]'
-                                        onChange={(e) => {
-                                            setReview(e.target.value)
-                                        }}
-                                    />
-                                </div>
-                                <button onClick={() => {
-                                    submitTestimoni(    item.id    )
-                                }} className="mt-4 rounded-lg w-full text-white bg-[#645CBB] hover:bg-[#BFACE2] duration-200 p-2">
-                                    <p>Submit</p>
-                                </button>
+                                </Box>
+                            </Modal>
+                        <div className="w-[60%] bg-white mt-2 rounded-lg shadow flex flex-col p-4">
+                            <div className="flex items-center">
+                                <p className="flex items-center text-[12px] font-[400]"> <HiOutlineShoppingBag className='mr-2 text-[17px]'/> 27/11/2023</p>
+                                {item.paymentStatus === 'DP' ? 
+                                <p className='bg-gray-200 ml-4 px-2 rounded text-[12px] font-[300]'>down payment</p>
+                                :
+                                <p className='bg-gray-200 ml-4 px-2 rounded text-[12px] font-[300]'>fully paid</p>
+                                }
                             </div>
-                            </Box>
-                        </Modal>
-                    <div className="w-[60%] bg-white mt-2 rounded-lg shadow flex flex-col p-4">
+                            <div className="flex items-center w-full mt-4 h-[4em]">
+                                <div className='w-[15%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                                </div>
+                                <div className='w-[50%] h-full flex justify-center flex-col'>
+                                    <p className='font-semibold'>{item.Product.name}</p>
+                                    <div className='flex'>
+                                    <p className='text-[11px]'>Reservation date:  {formatDate(item.reservationDate)}</p>
+                                    <button onClick={handleOpen2} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
+                                    </div>
+                                    <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                </div>
+                                { item.paymentStatus === 'DP' ? 
+                                <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
+                                    <p className='text-[11px]'>remaining payment: <span className='font-semibold'> {formatRupiah(item.fullPayment-item.downPayment)}</span></p>
+                                    <p className='text-[11px]'>payment due: <span className='font-semibold'>{
+                                    formatEstimatedDate(item.reservationDate, item.Product.estimatedDay) 
+                                    }</span> </p>
+                                    <button onClick={() => {
+                                        clickorderPay(item.id, item.quantity, item.Product.id, item.Product.price, item.Product.name, item.Product.imgUrl, item.Product.estimatedDay, item.reservationDate, item.fullPayment, item.downPayment, item.notes)
+                                    }} className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Pay
+                                    </button>
+                                    {/* <p className='text-[11px]'>Total Transaction</p>
+                                    <p className='text-[13px]'>IDR 500.000.000,00</p> */}
+                                </div> : 
+                                ''
+                                }
+                                {item.paymentStatus === 'DONE' ? 
+                                <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
+                                    <button onClick={handleOpen} className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
+                                    </button>
+                                </div> : ''}
+                                { item.paymentStatus === 'DONEREVIEW' ? 
+                                <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
+                                    <p>Transaction Completed</p>
+                                </div> : ''}
+                            </div>
+                            <div className="flex items-center w-full mt-2 justify-end">
+                            </div>
+                        </div>
+                        </>
+                    )
+                })}
+                    {/* <div className="w-[60%] bg-white mt-2 rounded-lg shadow flex flex-col p-4">
                         <div className="flex items-center">
                             <p className="flex items-center text-[12px] font-[400]"> <HiOutlineShoppingBag className='mr-2 text-[17px]'/> 27/11/2023</p>
-                            {item.paymentStatus === 'DP' ? 
-                            <p className='bg-gray-200 ml-4 px-2 rounded text-[12px] font-[300]'>down payment</p>
-                            :
                             <p className='bg-gray-200 ml-4 px-2 rounded text-[12px] font-[300]'>fully paid</p>
-                            }
                         </div>
                         <div className="flex items-center w-full mt-4 h-[4em]">
-                            <div className='w-[15%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                            <div className='w-[15%] h-full flex items-center'><img src="https://images.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,c_fill,g_faces,w_80,h_80/v1491534752/assets/MWV_jewel_box_yvmjjd.webp" className='rounded-lg w-[90px] h-[60px]' alt="" />
                             </div>
                             <div className='w-[50%] h-full flex justify-center flex-col'>
-                                <p className='font-semibold'>{item.Product.name}</p>
-                                <div className='flex'>
-                                <p className='text-[11px]'>Reservation date:  {formatDate(item.reservationDate)}</p>
-                                <button onClick={handleOpen2} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
-                                </div>
-                                <p className='text-[11px]'>Total Transaction: {formatRupiah(item.fullPayment)}</p>
+                                <p className='font-semibold'>DINNER RECEPTION</p>
+                                <p className='text-[11px]'>Reservation date: 27/04/2024</p>
+                                <p className='text-[11px]'>Total Transaction: IDR 500.000.000,00</p>
                             </div>
-                            { item.paymentStatus === 'DP' ? 
                             <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center'>
-                                <p className='text-[11px]'>remaining payment: <span className='font-semibold'> {formatRupiah(item.fullPayment-item.downPayment)}</span></p>
-                                <p className='text-[11px]'>payment due: <span className='font-semibold'>{
-                                   formatEstimatedDate(item.reservationDate, item.Product.estimatedDay) 
-                                }</span> </p>
-                                <button onClick={() => {
-                                    clickorderPay(item.id, item.quantity, item.Product.id, item.Product.price, item.Product.name, item.Product.imgUrl, item.Product.estimatedDay, item.reservationDate, item.fullPayment, item.downPayment, item.notes)
-                                }} className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Pay
-                                </button>
+                                {/* <p className='text-[11px]'>remaining payment: <span className='font-semibold'>IDR 250.000.000,00</span></p>
+                                <p className='text-[11px]'>payment due: <span className='font-semibold'>28 Nov 2024</span> </p> */}
+                                {/* <button className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
+                                </button> */}
                                 {/* <p className='text-[11px]'>Total Transaction</p>
                                 <p className='text-[13px]'>IDR 500.000.000,00</p> */}
-                            </div> : 
-                            ''
-                            }
-                            {item.paymentStatus === 'DONE' ? 
-                            <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center'>
-                                <button onClick={handleOpen} className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
-                                </button>
-                            </div> : ''}
-                            { item.paymentStatus === 'DONEREVIEW' ? 
-                            <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
-                                <p>Thanks</p>
-                            </div> : ''}
+                            {/* </div>
                         </div>
                         <div className="flex items-center w-full mt-2 justify-end">
                         </div>
-                    </div>
-                    </>
-                )
-            })}
-                {/* <div className="w-[60%] bg-white mt-2 rounded-lg shadow flex flex-col p-4">
-                    <div className="flex items-center">
-                        <p className="flex items-center text-[12px] font-[400]"> <HiOutlineShoppingBag className='mr-2 text-[17px]'/> 27/11/2023</p>
-                        <p className='bg-gray-200 ml-4 px-2 rounded text-[12px] font-[300]'>fully paid</p>
-                    </div>
-                    <div className="flex items-center w-full mt-4 h-[4em]">
-                        <div className='w-[15%] h-full flex items-center'><img src="https://images.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,c_fill,g_faces,w_80,h_80/v1491534752/assets/MWV_jewel_box_yvmjjd.webp" className='rounded-lg w-[90px] h-[60px]' alt="" />
-                        </div>
-                        <div className='w-[50%] h-full flex justify-center flex-col'>
-                            <p className='font-semibold'>DINNER RECEPTION</p>
-                            <p className='text-[11px]'>Reservation date: 27/04/2024</p>
-                            <p className='text-[11px]'>Total Transaction: IDR 500.000.000,00</p>
-                        </div>
-                        <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center'>
-                            {/* <p className='text-[11px]'>remaining payment: <span className='font-semibold'>IDR 250.000.000,00</span></p>
-                            <p className='text-[11px]'>payment due: <span className='font-semibold'>28 Nov 2024</span> </p> */}
-                            {/* <button className='w-[75%] mt-2 mr-4 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
-                            </button> */}
-                            {/* <p className='text-[11px]'>Total Transaction</p>
-                            <p className='text-[13px]'>IDR 500.000.000,00</p> */}
-                        {/* </div>
-                    </div>
-                    <div className="flex items-center w-full mt-2 justify-end">
-                    </div>
-                </div> */} 
-        </div>
+                    </div> */} 
+            </div>
+        </>
     )
 }
 
