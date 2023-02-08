@@ -45,11 +45,17 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  }
+}
 
 .logo {
   width: auto;
   height: 30px;
+  object-fit: cover;
+}
+
+.avatar {
+  height: auto;
+  width: 50px;
   object-fit: cover;
 }
 
@@ -103,7 +109,8 @@ Table {
   border-color: red;
 }
 
-thead, tbody tr {
+thead,
+tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;

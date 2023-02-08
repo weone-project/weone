@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { gql, useMutation } from "@apollo/client";
+import { Link } from "react-router-dom";
 
 const updateReschedule = gql`
   mutation Mutation($accessToken: String, $form: reschedule, $orderId: ID) {
@@ -61,7 +62,7 @@ function OrderRow({ el, i, refetch }) {
           <Modal.Body>
             <div className="d-flex flex-row justify-content-between">
               <h5 className="fw-bold">Customer Information</h5>
-              <Button className=" btn-primary btn-sm">Chat Customer</Button>
+              <Link to="/messege" className="btn btn-primary btn-sm">Chat Customer</Link>
             </div>
             <div className="d-flex flex-row">
               <Form.Group className="d-flex flex-column">
