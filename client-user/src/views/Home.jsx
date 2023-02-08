@@ -19,7 +19,7 @@ console.log(data);
       const temp = data.getProductActive.filter((item) => item.rating >= 4)
       setNewData(temp)
     }
-  }, [data])
+  }, [])
   return (
     <>
       {/* carousell */}

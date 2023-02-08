@@ -10,14 +10,14 @@ const Footer = () => {
         <div className="mx-6 py-10 text-center mt-8">
           <div className="grid grid-cols-4 gap-6">
             <div className="h-full -mt-5 grid content-center">
-              <img src={require('../assets/logo/Logo-l.png')} alt="" srcset="" />
+              <img src={require('../assets/logo/Logo-l.png')} alt="" />
             </div>
             <div className="">
               <h6 className="uppercase font-semibold mb-4  text-left">
                 Metode Pembayaran
               </h6>
               <div className="">
-                <img src="https://wedew.id/themes/wedew-public/assets/images/payment-options.id.png" alt="" srcset="" />
+                <img src="https://wedew.id/themes/wedew-public/assets/images/payment-options.id.png" />
               </div>
             </div>
 
