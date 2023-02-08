@@ -10,7 +10,7 @@ import Message from '../views/Message'
 import Tema1 from '../views/theme/Tema1'
 import Dashboard from '../views/Dashboard'
 import InvitationTheme from '../views/InvitationTheme'
-import TemaAdd from '../views/theme/TemaAdd copy'
+import TemaPrev from '../views/theme/TemaPrev'
 
 
 const router = createBrowserRouter([
@@ -31,15 +31,27 @@ const router = createBrowserRouter([
             },
             {
                 path:'/histories',
-                element: <OrderHistory/>
+                element: <OrderHistory/>,
+                loader: () => {
+                    if (!localStorage.getItem('token')) {
+                        return redirect('/login')
+                    }
+                    return null
+                }
             },
             {
                 path: '/message',
-                element: <Message/>
+                element: <Message/>,
+                loader: () => {
+                    if (!localStorage.getItem('token')) {
+                        return redirect('/login')
+                    }
+                    return null
+                }
             },
             {
                 path: '/invitations',
-                element: <InvitationTheme/>
+                element: <InvitationTheme/>,
             }, 
         ]
     },
@@ -56,12 +68,12 @@ const router = createBrowserRouter([
     {
         path: '/register',
         element: <Register/>,
-        loader: () => {
-            if (!localStorage.getItem('token')) {
-                return redirect('/login')
-            }
-            return null
-        }
+        // loader: () => {
+        //     if (!localStorage.getItem('token')) {
+        //         return redirect('/login')
+        //     }
+        //     return null
+        // }
     },        
     {
         path: '/inv',
@@ -73,8 +85,8 @@ const router = createBrowserRouter([
     },            
     {
         path: '/prev',
-        element: <TemaAdd/>
-    },
+        element: <TemaPrev/>
+    },  
 ])
 
 export default router

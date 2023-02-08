@@ -6,7 +6,20 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../index.css";
 import { HiOutlineSwatch, HiOutlineBuildingOffice, HiOutlineCamera, HiOutlineRectangleStack } from "react-icons/hi2";
+import { useQuery } from '@apollo/client';
+import { GET_PRODUCT_ACTIVE } from '../queries/product';
+import { useEffect, useState } from 'react';
+import CardProducts from '../components/CardProducts';
 const Home = () => {
+  const {data, loading, error} = useQuery(GET_PRODUCT_ACTIVE);
+  const [newData, setNewData] = useState([]);
+console.log(data);
+  useEffect(() => {
+    if(data){
+      const temp = data.getProductActive.filter((item) => item.rating >= 4)
+      setNewData(temp)
+    }
+  }, [])
   return (
     <>
       {/* carousell */}
@@ -43,7 +56,7 @@ const Home = () => {
       </section>
 
       {/* body */}
-      <section className="w-full flex items-center justify-center my-10">
+      {/* <section className="w-full flex items-center justify-center my-10">
         <div className="flex flex-col items-end h-full w-[50%] ">
           <div className="bg-white w-[80%] h-[200px] my-4 cursor-pointer hover:shadow-lg border-[1px] border-gray-200 rounded-xl flex">
             <div className="w-[60%] px-10 py-6 flex flex-col justify-between h-full">
@@ -122,13 +135,13 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section className="h-[500px] sectionSpecial flex flex-col py-14 px-10">
+      <section className="h-[500px] sectionSpecial flex flex-col py-14 px-10 body-menu">
         <p className="text-3xl">Products You May Like!</p>
         <p className='font-light'>Temukan produk dan paket pernikahan terlengkap hanya di We-One!</p>
         
-        <div className='mt-20'>
+        <div className='mt-10'>
             <Swiper
             slidesPerView={5}
             spaceBetween={30}
@@ -145,17 +158,24 @@ const Home = () => {
             modules={[Navigation]}
             className="mySwiper"
         >
-            <SwiperSlide>
-                <div className='w-[260px] cursor-pointer'>
-                    <img src="https://london.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,h_210,w_272,c_fill,g_faces/v1/assets/espoir-studio-1635131538-3o87-oOmZ.webp" alt="" className="w-full h-[70%] rounded-lg" />
-                    <p>The Studio</p>
-                    <div className='flex'>
-                    <Rating name="read-only" value={5} readOnly />
-                    <p className='ml-2'>5.0</p>
-                    </div>
-                </div>
-            </SwiperSlide>
-            <SwiperSlide>
+          {newData?.map((item) => {
+            return (
+              <SwiperSlide key={item.id}>
+                <CardProducts  product={item}/>
+              {/* <div className='w-[260px] cursor-pointer'>
+                  <img src="https://london.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,h_210,w_272,c_fill,g_faces/v1/assets/espoir-studio-1635131538-3o87-oOmZ.webp" alt="" className="w-full h-[70%] rounded-lg" />
+                  <p>The Studio</p>
+                  <div className='flex'>
+                  <Rating name="read-only" value={5} readOnly />
+                  <p className='ml-2'>5.0</p>
+                  </div>
+              </div> */}
+          </SwiperSlide>
+            )
+          })
+          }
+
+            {/* <SwiperSlide>
                 <div className='w-[260px] cursor-pointer'>
                     <img src="https://london.bridestory.com/image/upload/dpr_1.0,f_webp,fl_progressive,q_80,h_210,w_272,c_fill,g_faces/v1/assets/espoir-studio-1635131538-3o87-oOmZ.webp" alt="" className="w-full h-[70%] rounded-lg" />
                     <p>The Studio</p>
@@ -214,7 +234,7 @@ const Home = () => {
                     <p className='ml-2'>5.0</p>
                     </div>
                 </div>
-            </SwiperSlide>
+            </SwiperSlide> */}
             </Swiper>
         </div>
       </section>
