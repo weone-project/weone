@@ -35,7 +35,6 @@ const OrderHistory = () => {
         },
         fetchPolicy: 'no-cache'
     })
-    console.log(data, '<<<<<<<<<<<<<<<<<<<<<<<<<');
     const [dataTestimonial, { loading: loadingTestimonial, error: errorTestimonial, data: dataTestimonialData }] = useMutation(CREATE_TESTIMONI, {
         refetchQueries: [{
             query: GET_ORDERS,
@@ -121,6 +120,7 @@ const OrderHistory = () => {
                         accessToken: localStorage.getItem('token')
                     }
                 })
+                // console.log(id, '<<<<<<<<<<<<<<<<<<<<<<?????????????????????/')
                 dataUpdate({
                     variables: {
                         form: {
@@ -134,7 +134,7 @@ const OrderHistory = () => {
                 handleClose()
             }
         }
-        // console.log(dataUpdateData, '<<<<<<<<<<<<<<<<<<<<<<<<<');
+        console.log(dataUpdateData, '<<<<<<<<><><<?<?<?<?><<<<<<<<<<<<<<<<<');
 
     useEffect(() => {
         if (dataTestimonialData?.createTestimony) {
@@ -388,7 +388,7 @@ const OrderHistory = () => {
                                 }
                             </div>
                             <div className="flex items-center w-full mt-4 h-[4em]">
-                                <div className='w-[15%] h-full flex items-center'><img src={item.Product.imgUrl} className='rounded-lg w-[90px] h-[60px]' alt="" />
+                                <div className='w-[15%] h-full flex items-center'><img src={item.Product.imgUrl[0]} className='rounded-lg w-[90px] h-[60px]' alt="" />
                                 </div>
                                 <div className='w-[50%] h-full flex justify-center flex-col'>
                                     <p className='font-semibold'>{item.Product.name}</p>
@@ -397,7 +397,7 @@ const OrderHistory = () => {
                                     {item.rescheduleStatus === 'requesting'? 
                                     <p className='text-[11px] ml-2 font-semibold'>|| Request date:  {formatDate(item.rescheduleDate)}</p> : 
                                     <button onClick={() => {
-                                        handleOpen2(item.id, item.Product.name, item.fullPayment, item.reservationDate,  item.Product.imgUrl)
+                                        handleOpen2(item.id, item.Product.name, item.fullPayment, item.reservationDate,  item.Product.imgUrl[0])
                                     }} className='px-2 text-[10px] border-[1px] ml-2 rounded-lg font-light hover:bg-gray-100 duration-200'>reschedule</button>
                                 }
                                     </div>
@@ -410,7 +410,7 @@ const OrderHistory = () => {
                                     formatEstimatedDate(item.reservationDate, item.Product.estimatedDay) 
                                     }</span> </p>
                                     <button onClick={() => {
-                                        clickorderPay(item.id, item.quantity, item.Product.id, item.Product.price, item.Product.name, item.Product.imgUrl, item.Product.estimatedDay, item.reservationDate, item.fullPayment, item.downPayment, item.notes)
+                                        clickorderPay(item.id, item.quantity, item.Product.id, item.Product.price, item.Product.name, item.Product.imgUrl[0], item.Product.estimatedDay, item.reservationDate, item.fullPayment, item.downPayment, item.notes)
                                     }} className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Pay
                                     </button>
                                     {/* <p className='text-[11px]'>Total Transaction</p>
@@ -422,7 +422,7 @@ const OrderHistory = () => {
                                 <div className='w-[35%] pl-4 border-l-2 h-full flex flex-col justify-center items-center'>
                                     <button onClick={() => {
                                         console.log(item.id, '>>>>>>>>>>>>>>>>>>>>>>>>');
-                                        handleOpen(item.id, item.Product.name, item.fullPayment, item.Product.imgUrl)
+                                        handleOpen(item.id, item.Product.name, item.fullPayment, item.Product.imgUrl[0])
                                     }} className='w-[75%] mt-2 bg-[#00425A] hover:bg-[#004159c3] duration-200 text-white px-4 py-[3px] rounded-lg'>Review
                                     </button>
                                 </div> : ''}
