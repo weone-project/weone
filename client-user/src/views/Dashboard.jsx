@@ -258,16 +258,16 @@ const navigate = useNavigate()
   return (
     <>
 
-      <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
+<section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
         <div className="flex w-full mx-[70px] justify-between items-center h-14">
+        <Link to={'/products'}>
           <div className="h-full flex items-center"><img src={logo} alt="" width={100} /></div>
+          </Link>
           <div className="h-10 flex h-full">
             <div className="flex mx-8 font-light h-full ">
-              <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Products</button>
-              <Link to={'/theme'}>
-                <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Invitations</button>
+              <Link to={'/products'}>
+                <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Home</button>
               </Link>
-              <button className="mx-4 hover:border-b-2 hover:border-[#645CBB] border-b-2 border-white font-[500] focus:border-b-2 focus:border-[#645CBB] h-full duration-300">Favorite</button>
             </div>
           </div>
         </div>

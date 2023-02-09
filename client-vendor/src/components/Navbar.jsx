@@ -11,7 +11,8 @@ function MyNavbar() {
     moveTo("/");
   };
   return (
-    <Navbar bg="white" className="Nav">
+
+<Navbar bg="white" className="navbar navbar-default navbar-fixed-top">
       <Container>
         <Navbar.Brand className="">
           <img className="logo" src="https://res.cloudinary.com/dnh89xvo5/image/upload/v1675526895/Final%20Project/Logo-l_l71oxb.png" alt="" />
