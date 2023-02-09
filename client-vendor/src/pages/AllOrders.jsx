@@ -65,6 +65,7 @@ function ProductsTable() {
   const { data, loading, error, refetch } = useQuery(getVendorOrders, {
     variables: { accessToken: localStorage.getItem("access_token") },
   });
+
   if (data) {
     return (
       <div className="containerFetch d-flex justify-content-center">
@@ -72,7 +73,7 @@ function ProductsTable() {
           <h2 className="text-center fw-bold mt-5 mb-3 headerText">Your Customer Orders</h2>
           <div className="bg-light rounded p-3 text-center shadow-lg" style={{ height: 575 }}>
             <Table striped rouhover size="md">
-              <thead>
+              <thead style={{fontSize: 14}}>
                 <tr>
                   <th>#</th>
                   <th>Id</th>
