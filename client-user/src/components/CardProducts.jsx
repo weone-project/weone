@@ -25,7 +25,8 @@ const CardProducts = ({ product }) => {
         <p className="text-sm mt-[5px] mx-2">{formatRupiah(product?.price)}</p>
         <div className="flex justify-between mx-2">
             <div className='flex items-center'>
-                <Rating name="read-only size-small" size="small" value={product?.rating} precision={0.5} readOnly />
+            {(!product?.rating) ? " " : <Rating name="read-only size-small" size="small" value={product?.rating} precision={0.5} readOnly />}
+                
             </div>
             <p className="text-[10px] flex items-center font-light"> <RiMapPin2Line/>{product?.Vendor?.city} </p>
         </div>

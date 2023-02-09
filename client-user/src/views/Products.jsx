@@ -35,7 +35,7 @@ const Products = () => {
                 setNewData(temp)
             } else {
                 const temp = data?.getProductActive.filter((item) => {
-                    return item.Category.name === filter.category
+                    return item?.Category?.name === filter.category
                   })
                   setNewData(temp)
             }
@@ -120,10 +120,10 @@ const Products = () => {
                             } */}
                             <MenuItem value={'Photographer'}>Photography</MenuItem>
                             <MenuItem value={'Catering'}>Cathering</MenuItem>
-                            <MenuItem value={'Gedung'}>Venue</MenuItem>
+                            <MenuItem value={'Venue'}>Venue</MenuItem>
                             <MenuItem value={'Entertainment'}>Entertaiment</MenuItem>
                             <MenuItem value={'Make up artist'}>Make Up Artist</MenuItem>
-                            <MenuItem value={'Paket EO'}>Paket EO</MenuItem>
+                            <MenuItem value={'EO Package'}>Paket EO</MenuItem>
                         </Select>
                     </FormControl>
                     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">

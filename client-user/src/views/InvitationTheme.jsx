@@ -47,12 +47,12 @@ const IntitatioinTheme = () => {
             <div className="mt-10 flex justify-center w-full">
                 <div className=" w-[75%] grid grid-cols-3 gap-x-6 gap-y-6">
                     {data?.getProductActive?.map((item) => {
-                        if (item.Category.name === "Invitation") {
+                        if (item.Category?.name === "Invitation") {
                             return (
                                 <Link to={`/theme/${item.id}`}>
                                     <div className='max-w-full bg-white rounded-lg text-[#00425A] cursor-pointer border-b-2 pb-2 group'>
                                         <img src={item.imgUrl} alt="" className="w-full rounded-t-lg mb-2 group-hover:shadow-md object-cover" />
-                                        <p className="card_p mx-2">{item.name}</p>
+                                        <p className="card_p mx-2">{item?.name}</p>
                                         <p className="text-sm  mx-2 font-bold">{formatRupiah(item.price)}</p>
                                         <div className="flex justify-between mx-2">
                                             <div className='flex items-center'>
