@@ -10,6 +10,8 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import '../index.css'
 import { ToastContainer, toast } from 'react-toastify';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,6 +26,7 @@ const Login = () => {
   
   const loginForm = (e) => {
     e.preventDefault();
+    signInWithEmailAndPassword(auth, dataLogin.email, dataLogin.password);
     if (!dataLogin.email) {
       toast.warn('Email is Required', {
         position: "top-right",
@@ -60,7 +63,7 @@ const Login = () => {
         localStorage.setItem('token', dataLoginUser.loginUser.access_token)
         localStorage.setItem('name', dataLoginUser.loginUser.name)
         localStorage.setItem('id', dataLoginUser.loginUser.id)
-        navigate('/')
+        navigate("/")
       }
   }, [dataLoginUser])
 

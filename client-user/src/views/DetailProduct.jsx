@@ -10,7 +10,7 @@ import { Pagination, Navigation } from "swiper";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { HiChatBubbleBottomCenterText } from "react-icons/hi2";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { GET_PRODUCT_BY_ID } from "../queries/product";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_MIDTRANS } from "../queries/midtrans";
@@ -486,11 +486,11 @@ const DetailProduct = () => {
             </div>
             <div className="mt-4  w-full rounded-lg h-[40px] flex flex-col items-center items-center">
               <div className="flex w-full">
-                <button className="w-[50%] mx-2 bg-white text-[#00425A] border-[1px] border-[#BFACE2] hover:bg-[#A084DC] hover:text-white duration-200 h-[40px] rounded-lg flex items-center justify-center">
+                <Link to={'/chat'} className="w-[50%] mx-2 bg-white text-[#00425A] border-[1px] border-[#BFACE2] hover:bg-[#A084DC] hover:text-white duration-200 h-[40px] rounded-lg flex items-center justify-center">
                   {" "}
                   <HiChatBubbleBottomCenterText className="mx-2" />
                   Chat
-                </button>
+                </Link>
                 {localStorage.getItem("token") ? (
                   <button
                     onClick={handleOpen}

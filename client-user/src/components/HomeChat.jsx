@@ -9,21 +9,25 @@ import { BiLogOutCircle } from "react-icons/bi"
 import { useQuery } from "@apollo/client"
 import { GET_USER_BY_ID } from "../queries/user"
 import { accessToken } from "mapbox-gl"
+import Sidebar from "./Sidebar";
+import Chat from "./Chat";
+import { useEffect, useState, useRef } from "react";
 
-const Navbar = () => {
-    const {data : dataUser, loading, error} = useQuery(GET_USER_BY_ID, {
-        variables: {
-            getUserByIdId: localStorage.getItem('id'),
-            accessToken: localStorage.getItem('token')
-        }
-    })
-    const navigate = useNavigate()
-    const buttonLogOut = () => {
-        localStorage.clear()
-        navigate('/login')
-    }   
-    return (
-        <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
+function HomeChat(){
+  const {data : dataUser, loading, error} = useQuery(GET_USER_BY_ID, {
+    variables: {
+        getUserByIdId: localStorage.getItem('id'),
+        accessToken: localStorage.getItem('token')
+    }
+})
+const navigate = useNavigate()
+const buttonLogOut = () => {
+    localStorage.clear()
+    navigate('/login')
+}  
+  return (
+    <div className="w-full h-full">
+      <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
             <div className="flex w-full mx-[70px] justify-between items-center h-14">
                 <div className="h-full flex items-center"><Link to={'/'} className="judul"><img src={logo} alt="" width={100} /></Link></div>
                 <div className="h-10 flex h-full">
@@ -94,11 +98,71 @@ const Navbar = () => {
                     <Link to={'/login'} className="px-4 py-[3px] rounded-xl ml-2 duration-200 bg-[#645CBB] text-white hover:bg-[#674188]">Login</Link>
                     </>                     
                     }
-
-
                 </div>
             </div>
         </section>
-    )
-}
-export default Navbar
+<div className='home'>
+    <div className="container border-2">
+      <Sidebar/>
+      <Chat/>
+    </div>
+  </div>
+    </div>
+  
+)}
+
+export default HomeChat
+
+
+// // import Talk from 'talkjs';
+// // import { useEffect, useState, useRef } from 'react';
+
+// function MyChatComponent() {
+//   const chatboxEl = useRef();
+
+//   // wait for TalkJS to load
+//   const [talkLoaded, markTalkLoaded] = useState(false);
+
+//   useEffect(() => {
+//     Talk.ready.then(() => markTalkLoaded(true));
+
+//     if (talkLoaded) {
+//       const currentUser = new Talk.User({
+//         id: '1',
+//         name: 'Henry Mill',
+//         email: 'henrymill@example.com',
+//         photoUrl: 'henry.jpeg',
+//         welcomeMessage: 'Hello!',
+//         role: 'default',
+//       });
+
+//       const otherUser = new Talk.User({
+//         id: '2',
+//         name: 'Jessica Wells',
+//         email: 'jessicawells@example.com',
+//         photoUrl: 'jessica.jpeg',
+//         welcomeMessage: 'Hello!',
+//         role: 'default',
+//       });
+
+//       const session = new Talk.Session({
+//         appId: 'tLqyWVpz',
+//         me: otherUser,
+//       });
+
+//       const conversationId = Talk.oneOnOneId(currentUser, otherUser);
+//       const conversation = session.getOrCreateConversation(conversationId);
+//       conversation.setParticipant(currentUser);
+//       conversation.setParticipant(otherUser);
+
+//       const chatbox = session.createInbox(currentUser);
+//       chatbox.select(conversation);
+//       chatbox.mount(chatboxEl.current);
+
+//       return () => session.destroy();
+//     }
+//   }, [talkLoaded]);
+
+//   return <div ref={chatboxEl} style={{height:500}} />;
+// }
+// export default MyChatComponent;

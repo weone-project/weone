@@ -10,7 +10,9 @@ import { useQuery } from '@apollo/client';
 import { GET_PRODUCT_ACTIVE } from '../queries/product';
 import { useEffect, useState } from 'react';
 import CardProducts from '../components/CardProducts';
+import { auth } from '../firebase';
 const Home = () => {
+  console.log(auth)
   const {data, loading, error} = useQuery(GET_PRODUCT_ACTIVE);
   const [newData, setNewData] = useState([]);
   useEffect(() => {

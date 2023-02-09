@@ -12,7 +12,36 @@ import Dashboard from '../views/Dashboard'
 import InvitationTheme from '../views/InvitationTheme'
 import TemaPrev from '../views/theme/TemaPrev'
 import InvDashboard from '../views/InvDashboard'
+import HomeChat from '../components/HomeChat'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from '../Context/AuthContext'
 
+const Apps = (function () {
+    const { currentUser } = useContext(AuthContext);
+  
+    const ProtectedRoute = ({ children }) => {
+      if (!currentUser) {
+        return <Navigate to="/login" />;
+      }
+      return children
+    };
+  
+    return (
+      <BrowserRouter>
+        <Routes>
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <HomeChat />
+                </ProtectedRoute>
+              }
+            />
+        </Routes>
+      </BrowserRouter>
+    );
+  })
 
 const router = createBrowserRouter([
     {
@@ -91,7 +120,11 @@ const router = createBrowserRouter([
     {
         path: '/dash',
         element: <InvDashboard/>
-    },  
+    }, 
+    {
+        path: '/chat',
+        element: <HomeChat/>
+    }
 ])
 
 export default router

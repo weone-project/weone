@@ -2,7 +2,7 @@ import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { GiftedChat } from 'react-web-gifted-chat';
 import { useCallback, useLayoutEffect, useState } from "react";import { collection, addDoc, orderBy, query, onSnapshot } from 'firebase/firestore';
 import { auth, database } from '../config/firebase';
-import { ChatFeed, Message } from 'react-chat-ui'
+// import { ChatFeed, Message } from 'react-chat-ui'
 
 const Messages = () => {
     const [messages, setMessages] = useState([])
