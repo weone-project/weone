@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Badge } from "react-bootstrap";
 import { gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
+import { isNonNullObject } from "@apollo/client/utilities";
 
 const updateReschedule = gql`
   mutation Mutation($accessToken: String, $form: reschedule, $orderId: ID) {
@@ -12,6 +13,7 @@ const updateReschedule = gql`
 `;
 
 function OrderRow({ el, i, refetch }) {
+  // console.log(el)
   const [modalShow, setModalShow] = useState(false);
   const [updateRescheduleStatus, { data: dataRescheduleStatus }] = useMutation(updateReschedule);
 
@@ -69,10 +71,13 @@ function OrderRow({ el, i, refetch }) {
       <td className="pt-3">{el.quantity}</td>
       <td className="pt-3">{new Date (el.reservationDate).toLocaleDateString("id", {year: 'numeric', month: 'long', day: 'numeric'})}</td>
       {el.rescheduleDate?<td className="pt-3">{new Date (el.rescheduleDate).toLocaleDateString("id", {year: 'numeric', month: 'long', day: 'numeric'})}</td>: <td className="pt-3"></td>}
-      <td className="pt-3">{el.rescheduleStatus}</td>
+      {el.rescheduleStatus === "requesting" && <td className="pt-3"><Badge className="bg-danger text-white fw-bold" style={{fontSize: 12}}>{el.rescheduleStatus}</Badge></td>}
+      {el.rescheduleStatus === "approved" && <td className="pt-3"><Badge className="bg-success text-white fw-bold" style={{fontSize: 12}}>{el.rescheduleStatus}</Badge></td>}
+      {el.rescheduleStatus === "not approved" && <td className="pt-3"><Badge className="bg-warning text-white fw-bold" style={{fontSize: 12}}>{el.rescheduleStatus}</Badge></td>}
+      {el.rescheduleStatus === null && <td>{el.rescheduleStatus}</td>}
       <td className="pt-3">{el.paymentStatus}</td>
       <td className="pt-3">{el.fullPayment.toLocaleString()}</td>
-      <td className="pt-3">{el.downPayment.toLocaleString()}</td>
+      <td className="pt-3">{el.downPayment?.toLocaleString()}</td>
       <td className="pt-3"> {formatEstimatedDate(el.reservationDate, el.Product.estimatedDay)}</td>
       {el.notes ? <td className="pt-3">yes</td> : <td className="pt-3">no</td>}
       <td>
@@ -124,7 +129,7 @@ function OrderRow({ el, i, refetch }) {
                 </Form.Group>
               </div>
               <div>
-                <img className="imgProduct rounded-3" src="https://images.unsplash.com/photo-1513278974582-3e1b4a4fa21e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="..." />
+                <img className="imgProduct rounded-3" src={el.Product.imgUrl[0]} alt="..." />
               </div>
             </div>
             <hr />
@@ -147,7 +152,7 @@ function OrderRow({ el, i, refetch }) {
                 <small className="">: {el.paymentStatus}</small>
                 <small className="">: {el.quantity}</small>
                 <small className="">: {el.fullPayment.toLocaleString()}</small>
-                <small className="">: {el.downPayment.toLocaleString()}</small>
+                <small className="">: {el.downPayment?.toLocaleString()}</small>
                 <small className="">: {(el.fullPayment - el.downPayment).toLocaleString()}</small>
                 <small className="">: {formatEstimatedDate(el.reservationDate, el.Product.estimatedDay)}</small>
                 {renderResched(el.rescheduleStatus)}
