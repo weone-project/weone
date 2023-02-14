@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 const MainLayouts = () => {
     return (
         <>
-        <Navbar />
+        <Navbar className="" />
         <div className="pt-14 w-full h-screen">
             <Outlet />
             <Footer/>

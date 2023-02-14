@@ -10,8 +10,32 @@ body {
 }
 /* @import url('https://fonts.googleapis.com/css2?family=Sassy+Frass&display=swap'); */
 
+@import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
+
+.nameWed {
+  font-family: 'Imperial Script', cursive;
+}
+
+.map-container {
+  height: 400px;
+  }
+   
+  .sidebar {
+  background-color: rgba(35, 55, 75, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 12px;
+  border-radius: 4px;
+  }
+
+
+
 .card_p{
-  width: 250px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -28,9 +52,9 @@ body {
   background:
   linear-gradient(to top,
    rgb(255, 255, 255), 
-   rgba(255, 255, 255, 0.788),  
-   rgba(255, 255, 255, 0.616),  
-   rgba(255, 255, 255, 0.401)),  
+   rgba(255, 255, 255, 0.536),  
+   rgba(255, 255, 255, 0.31),  
+   rgba(255, 255, 255, 0.177)),  
    url(./groom-black-tuxedo-hugs-tender-stunning-bride-while-they-stand.jpg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -57,7 +81,13 @@ body {
 }
 
 .sectionSpecial {
-  background: url('https://alexandra.bridestory.com/image/upload/assets/bg-desktop3x-rkstZgpiI.webp');
+  background:   linear-gradient(to bottom,
+  rgb(255, 255, 255), 
+  rgba(255, 255, 255, 0.684),  
+  rgba(255, 255, 255, 0.293),  
+  rgba(255, 255, 255, 0.401))
+  ,url('https://alexandra.bridestory.com/image/upload/assets/bg-desktop3x-rkstZgpiI.webp');
+  margin-top: 5em;
 }
 
 code {
@@ -95,4 +125,18 @@ code {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.login{
+  background:
+  linear-gradient(to right,
+   rgba(255, 255, 255, 0.448), 
+   rgba(255, 255, 255, 0.468),  
+   rgba(255, 255, 255, 0.293),  
+   rgba(255, 255, 255, 0.401)),  
+   url(https://cdn.pixabay.com/photo/2019/06/25/04/01/wedding-4297343__480.jpg);
+  object-fit: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: white;
 }

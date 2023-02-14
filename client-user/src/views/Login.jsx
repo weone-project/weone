@@ -8,6 +8,10 @@ import { Input } from "@material-tailwind/react";
 import { GET_USERS, LOGIN_USER } from "../queries/user";
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import '../index.css'
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const navigate = useNavigate()
@@ -20,25 +24,70 @@ const Login = () => {
   
   const loginForm = (e) => {
     e.preventDefault();
-    LoginFormUser({
-      variables: {
-        form: dataLogin
-      }});
+    if (!dataLogin.email) {
+      toast.warn('Email is Required', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    } else if (!dataLogin.password) {
+      toast.warn('Password is Required', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    } else {
+      LoginFormUser({
+        variables: {
+          form: dataLogin
+        }});
+      }
     };
+    
     useEffect(() => {
       if(dataLoginUser){
+        console.log(dataLoginUser);
         localStorage.setItem('token', dataLoginUser.loginUser.access_token)
+        localStorage.setItem('name', dataLoginUser.loginUser.name)
+        localStorage.setItem('id', dataLoginUser.loginUser.id)
         navigate('/')
       }
   }, [dataLoginUser])
-  console.log(dataLoginUser, errorLoginUser);
+
+  // useEffect(() => {
+  //   if(errorLoginUser){
+  //     console.log(errorLoginUser?.message);
+  //     toast('🦄 Wow so easy!', {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: "light",
+  //       });
+  //   }
+  // }, [errorLoginUser])
+  // console.log(dataLoginUser, errorLoginUser?.graphQLErrors[0].message);
   return (
     <>
+    <ToastContainer/>
       <section className="fixed flex w-full border-b-[1px] bg-white shadow-md z-20">
         <div className="flex w-full mx-[70px] justify-between items-center h-14">
           <div className="h-full flex items-center">
             <Link to={"/"} className="judul">
-              <img src={logo} alt="" width={120} />
+              <img src={logo} alt="" width={100} />
             </Link>
           </div>
           <div className="h-10 flex h-full">
@@ -57,20 +106,15 @@ const Login = () => {
             </div>
           </div>
           <div className="flex mx-8">
-            <button className="mx-2 text-xl">
-              <HiChatBubbleLeftEllipsis />
-            </button>
-            <button className="mx-2 w-8">
-              {" "}
-              <img src={bride} alt="" />
-            </button>
           </div>
         </div>
       </section>
       <section className="pt-14 w-full min-h-[100vh]">
-        <div className="w-full flex px-[300px] mt-[50px]">
-          <div className="min-w-[60%] bg-gray-100">dsad</div>
-          <div className="min-w-[40%] bg-white h-[35em] shadow rounded-lg flex flex-col">
+        <div className="w-full flex px-[150px] mt-[50px] rounded-xl">
+          <div className="min-w-[65%] bg-gray-100 login rounded-l-xl p-10 flex flex-col items-center">
+            <p className="w-[80%] flex items-center justify-center text-center text-[#00425A] text-[20px]">Persiapkan Pernikahan dengan Beragam Kemudahan & Penawaran Ekslusif</p>
+          </div>
+          <div className="min-w-[35%] bg-white h-[35em] shadow rounded-lg flex flex-col">
             <div className="w-full p-10 h-[90%]">
               <div className="w-full mt-2 mb-6">
                 <p className="text-xl font-semibold">LOGIN</p>
@@ -130,7 +174,7 @@ const Login = () => {
                     />
                   </div>
                 </div> */}
-                <button className="w-full items-center justify-center flex mt-8 bg-[#00425A] hover:bg-[#674188] duration-200 h-[40px] text-white rounded-lg" onClick={loginForm}>
+                <button className="w-full items-center justify-center flex mt-8 bg-[#645CBB] hover:bg-[#674188] duration-200 h-[40px] text-white rounded-lg" onClick={loginForm}>
                   <p className="">Login</p>
                 </button>
               </form>
@@ -142,8 +186,8 @@ const Login = () => {
                   forgot password?
                 </a>
               </div>
-              <div className="w-full flex items-center justify-center mt-2">
-                asds
+              <div className="w-full flex items-center justify-center mt-2 text-[12px]">
+                Don't have an account? <Link to={'/register'} href="" className="text-red-700"> Register</Link>
               </div>
             </div>
             <div className="w-full bg-gray-100 h-[10%] rounded-b-lg flex items-center justify-center">
